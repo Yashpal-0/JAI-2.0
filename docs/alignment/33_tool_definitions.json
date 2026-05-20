@@ -1,0 +1,31 @@
+[
+  {
+    "name": "get_active_projects",
+    "description": "Retrieves the user's active projects from the database.",
+    "parameters": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "escalate_to_admin",
+    "description": "Opens an internal admin ticket for destructive or privileged actions (cancel subscription, delete account, change email).",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "intent": {
+          "type": "string",
+          "description": "The user's raw intent to pass to the admin."
+        }
+      }
+    }
+  },
+  {
+    "name": "start_quotation_flow",
+    "description": "Initiates the PRD and quotation gathering state machine.",
+    "parameters": {
+      "type": "object",
+      "properties": {}
+    }
+  }
+]

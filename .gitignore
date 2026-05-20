@@ -1,0 +1,7 @@
+tmp/
+ignore-docs/
+.venv/
+.playwright-mcp/
+.antigravitycli/
+.env
+.env.example
