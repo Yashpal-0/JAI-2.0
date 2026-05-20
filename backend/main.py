@@ -18,6 +18,7 @@ async def main():
     context = {
         "user_id": "terminal_user",
         "tenant_id": "studio.zerostic.com",
+        "thread_id": "main-session",
     }
 
     while True:
@@ -32,7 +33,8 @@ async def main():
             result = await graph.ainvoke(
                 {
                     "messages": [HumanMessage(content=user_input)],
-                    **context,
+                    "user_id": context["user_id"],
+                    "tenant_id": context["tenant_id"],
                 },
                 config={"configurable": context},
             )

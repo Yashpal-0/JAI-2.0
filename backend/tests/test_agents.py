@@ -96,7 +96,7 @@ def test_orchestrator_routes_and_returns_response():
     )
     result = graph.invoke(
         {"messages": [HumanMessage(content="Hello")], "user_id": "u1", "tenant_id": "studio.zerostic.com"},
-        config={"configurable": {"user_id": "u1", "tenant_id": "studio.zerostic.com"}},
+        config={"configurable": {"user_id": "u1", "tenant_id": "studio.zerostic.com", "thread_id": "test-thread"}},
     )
     assert len(result["messages"]) >= 2
 

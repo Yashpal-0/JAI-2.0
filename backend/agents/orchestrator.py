@@ -3,6 +3,7 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import SystemMessage
 from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import tool
+from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import StateGraph, START, END
 from langgraph.types import Command
 
@@ -100,4 +101,4 @@ def build_orchestrator(
     workflow.add_edge("dev_agent", END)
     workflow.add_edge("analytics_agent", END)
 
-    return workflow.compile()
+    return workflow.compile(checkpointer=MemorySaver())
