@@ -1,0 +1,7 @@
+# OpenAI Agents SDK and Dependencies
+openai>=1.0.0
+openai-agents
+python-dotenv>=1.0.0
+
+# LangSmith for Telemetry and Tracing
+langsmith[openai-agents]

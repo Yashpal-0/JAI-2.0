@@ -5,3 +5,4 @@ ignore-docs/
 .antigravitycli/
 .env
 .env.example
+.zerostic_rag.db
