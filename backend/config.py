@@ -11,8 +11,8 @@ OPENROUTER_MODEL = os.getenv("OPENROUTER_MODEL", "meta-llama/llama-3.3-70b-instr
 def get_llm() -> ChatOpenAI:
     return ChatOpenAI(
         model=OPENROUTER_MODEL,
-        openai_api_key=os.getenv("OPENROUTER_API_KEY"),
-        openai_api_base="https://openrouter.ai/api/v1",
+        api_key=os.getenv("OPENROUTER_API_KEY"),
+        base_url="https://openrouter.ai/api/v1",
         default_headers={
             "HTTP-Referer": "https://zerostic.com",
             "X-Title": "Zerostic JAI 2.0",
