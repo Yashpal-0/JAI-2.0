@@ -73,3 +73,44 @@ def test_analytics_agent_returns_ai_message():
     )
     last_message = result["messages"][-1]
     assert isinstance(last_message, AIMessage)
+
+
+def test_orchestrator_graph_compiles():
+    from agents.orchestrator import build_orchestrator
+    graph = build_orchestrator(
+        llm=make_fake_llm(),
+        pm_graph=build_pm_agent_stub(),
+        dev_graph=build_dev_agent_stub(),
+        analytics_graph=build_analytics_agent_stub(),
+    )
+    assert graph is not None
+
+
+def test_orchestrator_routes_and_returns_response():
+    from agents.orchestrator import build_orchestrator
+    graph = build_orchestrator(
+        llm=make_fake_llm("I'll help you with your request."),
+        pm_graph=build_pm_agent_stub(),
+        dev_graph=build_dev_agent_stub(),
+        analytics_graph=build_analytics_agent_stub(),
+    )
+    result = graph.invoke(
+        {"messages": [HumanMessage(content="Hello")], "user_id": "u1", "tenant_id": "studio.zerostic.com"},
+        config={"configurable": {"user_id": "u1", "tenant_id": "studio.zerostic.com"}},
+    )
+    assert len(result["messages"]) >= 2
+
+
+def build_pm_agent_stub():
+    from agents.pm_agent import build_pm_agent
+    return build_pm_agent(llm=make_fake_llm("PM handled it."))
+
+
+def build_dev_agent_stub():
+    from agents.dev_agent import build_dev_agent
+    return build_dev_agent(llm=make_fake_llm("Dev handled it."))
+
+
+def build_analytics_agent_stub():
+    from agents.analytics_agent import build_analytics_agent
+    return build_analytics_agent(llm=make_fake_llm("Analytics handled it."))
