@@ -7,7 +7,6 @@ Usage (run from backend/):
     python rag/ingest.py --docs-dir docs --chroma-dir chroma_db
 """
 import argparse
-import os
 from pathlib import Path
 
 

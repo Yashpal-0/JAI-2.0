@@ -26,7 +26,7 @@ def fno_bazar_market_trigger_watcher(
         "asset_symbol": asset_symbol.upper(),
         "threshold_value": threshold,
         "status": "ACTIVE_WATCH",
-        "registered_alert_hook": f"studio.zerostic.com/notifications/fno-{asset_symbol.lower()}",
+        "registered_alert_hook": f"{tenant_id}/notifications/fno-{asset_symbol.lower()}",
     })
 
 

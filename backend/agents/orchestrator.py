@@ -73,7 +73,7 @@ def build_orchestrator(
 
     def orchestrator_node(state: JAIState, config: RunnableConfig) -> Command[Literal["pm_agent", "dev_agent", "analytics_agent", "__end__"]]:
         messages = [SystemMessage(content=ORCHESTRATOR_SYSTEM_PROMPT)] + list(state["messages"])
-        response = llm_with_tools.invoke(messages)
+        response = llm_with_tools.invoke(messages, config=config)
 
         if not response.tool_calls:
             return Command(goto=END, update={"messages": [response]})

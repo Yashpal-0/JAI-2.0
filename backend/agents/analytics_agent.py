@@ -1,5 +1,6 @@
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import SystemMessage
+from langchain_core.runnables import RunnableConfig
 from langgraph.graph import StateGraph, START
 from langgraph.prebuilt import ToolNode, tools_condition
 
@@ -34,9 +35,9 @@ def build_analytics_agent(llm: BaseChatModel | None = None):
 
     llm_with_tools = llm.bind_tools(ANALYTICS_TOOLS)
 
-    def agent_node(state: JAIState):
+    def agent_node(state: JAIState, config: RunnableConfig):
         messages = [SystemMessage(content=ANALYTICS_SYSTEM_PROMPT)] + list(state["messages"])
-        response = llm_with_tools.invoke(messages)
+        response = llm_with_tools.invoke(messages, config=config)
         return {"messages": [response]}
 
     workflow = StateGraph(JAIState)
