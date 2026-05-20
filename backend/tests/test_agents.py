@@ -56,3 +56,20 @@ def test_dev_agent_returns_ai_message():
     )
     last_message = result["messages"][-1]
     assert isinstance(last_message, AIMessage)
+
+
+def test_analytics_agent_graph_compiles():
+    from agents.analytics_agent import build_analytics_agent
+    graph = build_analytics_agent(llm=make_fake_llm())
+    assert graph is not None
+
+
+def test_analytics_agent_returns_ai_message():
+    from agents.analytics_agent import build_analytics_agent
+    graph = build_analytics_agent(llm=make_fake_llm("Market watcher set for NIFTY."))
+    result = graph.invoke(
+        {"messages": [HumanMessage(content="Watch NIFTY above 20000")], "user_id": "u1", "tenant_id": "studio.zerostic.com"},
+        config={"configurable": {"user_id": "u1", "tenant_id": "studio.zerostic.com"}},
+    )
+    last_message = result["messages"][-1]
+    assert isinstance(last_message, AIMessage)
