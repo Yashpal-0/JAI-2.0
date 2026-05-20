@@ -39,3 +39,20 @@ def test_pm_agent_returns_ai_message():
     last_message = result["messages"][-1]
     assert isinstance(last_message, AIMessage)
     assert last_message.content != ""
+
+
+def test_dev_agent_graph_compiles():
+    from agents.dev_agent import build_dev_agent
+    graph = build_dev_agent(llm=make_fake_llm())
+    assert graph is not None
+
+
+def test_dev_agent_returns_ai_message():
+    from agents.dev_agent import build_dev_agent
+    graph = build_dev_agent(llm=make_fake_llm("Here's a hint for your IDE error."))
+    result = graph.invoke(
+        {"messages": [HumanMessage(content="I have a missing semicolon error")], "user_id": "u1", "tenant_id": "dev.zerostic.com"},
+        config={"configurable": {"user_id": "u1", "tenant_id": "dev.zerostic.com"}},
+    )
+    last_message = result["messages"][-1]
+    assert isinstance(last_message, AIMessage)
