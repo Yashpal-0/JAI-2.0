@@ -1,7 +1,19 @@
-# OpenAI Agents SDK and Dependencies
+# LangChain + LangGraph
+langchain
+langgraph
+langchain-openai
+langchain-community
+langchain-chroma
+langchain-huggingface
+langchain-text-splitters
+
+# Vector store and embeddings
+chromadb
+sentence-transformers
+
+# LLM client and env
 openai>=1.0.0
-openai-agents
 python-dotenv>=1.0.0
 
-# LangSmith for Telemetry and Tracing
-langsmith[openai-agents]
+# Tracing
+langsmith
