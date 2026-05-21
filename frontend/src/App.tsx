@@ -18,6 +18,8 @@ export default function App() {
     setInputText('')
   }
 
+  const isDisabled = isStreaming || inputText.trim() === ''
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
@@ -93,7 +95,7 @@ export default function App() {
           placeholder="Type a message…"
           style={{
             flex: 1,
-            resize: 'horizontal',
+            resize: 'none',
             padding: '0.5rem',
             borderRadius: '4px',
             border: '1px solid #ccc',
@@ -103,7 +105,7 @@ export default function App() {
         />
         <button
           onClick={handleSend}
-          disabled={isStreaming || inputText.trim() === ''}
+          disabled={isDisabled}
           style={{
             padding: '0.5rem 1.25rem',
             borderRadius: '4px',
@@ -111,8 +113,8 @@ export default function App() {
             background: '#0066cc',
             color: '#fff',
             fontSize: '1rem',
-            cursor: isStreaming || inputText.trim() === '' ? 'not-allowed' : 'pointer',
-            opacity: isStreaming || inputText.trim() === '' ? 0.6 : 1,
+            cursor: isDisabled ? 'not-allowed' : 'pointer',
+            opacity: isDisabled ? 0.6 : 1,
           }}
         >
           Send

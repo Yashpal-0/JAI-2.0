@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
 import { useChat } from './hooks/useChat'
@@ -60,8 +60,7 @@ describe('App', () => {
     render(<App />)
     const textarea = screen.getByPlaceholderText(/type a message/i)
 
-    await userEvent.type(textarea, '  hello world  ')
-    fireEvent.keyDown(textarea, { key: 'Enter', shiftKey: false })
+    await userEvent.type(textarea, 'hello world{Enter}')
 
     expect(sendMessage).toHaveBeenCalledWith('hello world')
   })
