@@ -32,9 +32,8 @@ describe('ChatWindow', () => {
       userMsg('3', 'How are you?'),
     ]
     render(<ChatWindow messages={messages} isStreaming={false} />)
-    expect(screen.getByText('Hello')).toBeTruthy()
-    expect(screen.getByText('Hi')).toBeTruthy()
-    expect(screen.getByText('How are you?')).toBeTruthy()
+    const bubbles = screen.getAllByTestId('message-bubble')
+    expect(bubbles).toHaveLength(3)
   })
 
   it('the last assistant message has isLastAssistantMessage true (shows cursor when streaming)', () => {

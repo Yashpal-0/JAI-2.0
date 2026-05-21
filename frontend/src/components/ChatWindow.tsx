@@ -38,24 +38,21 @@ export default function ChatWindow({ messages, isStreaming }: Props) {
     fontSize: '16px',
   }
 
-  if (messages.length === 0) {
-    return (
-      <div style={containerStyle}>
-        <div style={emptyStyle}>Start the conversation...</div>
-      </div>
-    )
-  }
-
   return (
     <div style={containerStyle}>
-      {messages.map((message, index) => (
-        <MessageBubble
-          key={message.id}
-          message={message}
-          isStreaming={isStreaming}
-          isLastAssistantMessage={index === lastAssistantIndex}
-        />
-      ))}
+      {messages.length === 0 ? (
+        <div style={emptyStyle}>Start the conversation...</div>
+      ) : (
+        messages.map((message, index) => (
+          <div key={message.id} data-testid="message-bubble">
+            <MessageBubble
+              message={message}
+              isStreaming={isStreaming}
+              isLastAssistantMessage={index === lastAssistantIndex}
+            />
+          </div>
+        ))
+      )}
       <div ref={bottomRef} />
     </div>
   )
