@@ -61,9 +61,9 @@ async def chat(req: ChatRequest, graph=Depends(get_graph)):
                 stream_mode="messages",
             ):
                 if isinstance(chunk, AIMessageChunk) and chunk.content:
-                    yield f"data: {chunk.content}\n\n"
+                    yield f"data: {chunk.content.replace(chr(10), ' ')}\n\n"
             yield "data: [DONE]\n\n"
         except Exception as e:
-            yield f"event: error\ndata: {str(e)}\n\n"
+            yield f"event: error\ndata: {str(e).replace(chr(10), ' ')}\n\n"
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
