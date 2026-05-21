@@ -36,7 +36,7 @@ export default function MessageBubble({ message, isLastAssistantMessage, isStrea
     <div style={wrapperStyle}>
       <div style={bubbleStyle}>
         {message.content}
-        {showCursor && <span style={cursorStyle}>▋</span>}
+        {showCursor && <span data-testid="cursor" style={cursorStyle}>▋</span>}
       </div>
     </div>
   )

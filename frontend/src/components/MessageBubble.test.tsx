@@ -27,20 +27,20 @@ describe('MessageBubble', () => {
     render(
       <MessageBubble message={assistantMessage} isLastAssistantMessage={true} isStreaming={true} />
     )
-    expect(screen.getByText('▋')).toBeInTheDocument()
+    expect(screen.getByTestId('cursor')).toBeInTheDocument()
   })
 
   it('does not show cursor when isStreaming is false', () => {
     render(
       <MessageBubble message={assistantMessage} isLastAssistantMessage={true} isStreaming={false} />
     )
-    expect(screen.queryByText('▋')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('cursor')).not.toBeInTheDocument()
   })
 
   it('does not show cursor on user messages even when isStreaming is true', () => {
     render(
       <MessageBubble message={userMessage} isLastAssistantMessage={false} isStreaming={true} />
     )
-    expect(screen.queryByText('▋')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('cursor')).not.toBeInTheDocument()
   })
 })
