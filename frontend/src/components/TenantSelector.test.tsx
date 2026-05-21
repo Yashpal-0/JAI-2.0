@@ -1,15 +1,19 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { TenantSelector } from './TenantSelector'
 import { TENANTS, Tenant } from '../types'
 
 describe('TenantSelector', () => {
-  const defaultProps = {
-    value: TENANTS[0] as Tenant,
-    onChange: vi.fn(),
-    disabled: false,
-  }
+  let defaultProps: { value: Tenant; onChange: ReturnType<typeof vi.fn>; disabled: boolean }
+
+  beforeEach(() => {
+    defaultProps = {
+      value: TENANTS[0] as Tenant,
+      onChange: vi.fn(),
+      disabled: false,
+    }
+  })
 
   it('renders all 3 tenant options', () => {
     render(<TenantSelector {...defaultProps} />)

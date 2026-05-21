@@ -12,7 +12,10 @@ export function TenantSelector({ value, onChange, disabled }: Props) {
       <span>Tenant:</span>
       <select
         value={value}
-        onChange={(e) => onChange(e.target.value as Tenant)}
+        onChange={(e) => {
+          const val = e.target.value
+          if (TENANTS.includes(val as Tenant)) onChange(val as Tenant)
+        }}
         disabled={disabled}
         style={{
           padding: '0.25rem 0.5rem',
