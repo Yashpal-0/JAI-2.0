@@ -4,6 +4,10 @@ from langchain_core.runnables import RunnableConfig
 from langgraph.graph import StateGraph, START
 from langgraph.prebuilt import ToolNode, tools_condition
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from agents.state import JAIState
 from config import get_llm
 from rag.pipeline import query_docs

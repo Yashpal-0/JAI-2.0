@@ -9,6 +9,10 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.prebuilt import ToolNode
 from langgraph.types import Command
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 from agents.state import JAIState
 from config import get_llm
 from rag.pipeline import build_rag_context
