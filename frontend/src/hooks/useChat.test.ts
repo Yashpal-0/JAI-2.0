@@ -28,7 +28,7 @@ describe('useChat', () => {
       'data: [DONE]\n\n',
     ])
 
-    const { result } = renderHook(() => useChat('studio.zerostic.com', 'test_user'))
+    const { result } = renderHook(() => useChat('zerostic.com', 'test_user'))
 
     await act(async () => {
       await result.current.sendMessage('Hi')
@@ -46,7 +46,7 @@ describe('useChat', () => {
       json: async () => ({ detail: 'Invalid tenant_id: evil.com' }),
     }))
 
-    const { result } = renderHook(() => useChat('studio.zerostic.com', 'test_user'))
+    const { result } = renderHook(() => useChat('zerostic.com', 'test_user'))
 
     await act(async () => {
       await result.current.sendMessage('Hi')

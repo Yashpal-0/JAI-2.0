@@ -5,9 +5,7 @@ export interface Message {
 }
 
 export const TENANTS = [
-  'studio.zerostic.com',
-  'pm.zerostic.com',
-  'dev.zerostic.com',
+  'zerostic.com',
 ] as const
 
 export type Tenant = typeof TENANTS[number]
