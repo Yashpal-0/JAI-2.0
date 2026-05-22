@@ -14,20 +14,28 @@ _CACHE_TTL = 24 * 3600  # seconds
 
 _FALLBACK_ABOUT = """\
 ## About Zerostic
-Zerostic is a software development company based in Faridabad, Haryana, India. \
-It builds high-quality digital products for clients across India and beyond.
+Zerostic is a software development company based in Surajkund, Faridabad, Haryana, India — \
+the ultimate destination for businesses looking to create world-class mobile apps and websites. \
+We are more than just a business; we are a passionate team dedicated to providing the best \
+service and products to our customers.
 
-**Services:** Android app development, iOS app development, \
-Web application & website development, UX/UI design.
+**Services:** Android app development, iOS app development, Web application & website \
+development, App Design, UX/UI design, Web Design.
 
 **Notable products:**
-- **FnO Bazar** — Stock market data visualization for F&O traders (Android + Web)
-- **AppLab** — EdTech platform for aspiring Android developers (video lectures + in-app IDE)
-- **LOA (Legend Outdoor Advertising)** — Mobile app for a leading outdoor advertising agency
+- **FnO Bazar** — Stock market data visualization and analysis for investors and F&O traders \
+(Android + Web platform). Zerostic is the dedicated technology partner behind FnO Bazar.
+- **AppLab** — EdTech platform for aspiring Android developers: curated video lectures and \
+an integrated in-app IDE to learn and build Android apps.
+- **LOA (Legend Outdoor Advertising)** — Mobile app for a leading outdoor advertising agency \
+with a distinguished position across India.
+- **Zerostic Studio** — Client portal at studio.zerostic.com for managing projects, payments, \
+invoices, contracts, and scheduled calls with the Zerostic team.
 
 **Contact:** support@zerostic.com | +91 8076376175
-**Careers & Internships:** zerostic.link/internship
-**Location:** Faridabad, Haryana, India"""
+**Instagram:** instagram.com/zerostic
+**Careers & Internships:** zerostic.link/internship (applications via Typeform)
+**Location:** Surajkund, Faridabad, Haryana, India"""
 
 
 # ── Cache helpers ──────────────────────────────────────────────────────────────
@@ -82,17 +90,23 @@ def _extract_about_section(pages: list[dict[str, Any]]) -> str:
         about += f"{tagline}\n\n"
 
     about += """\
-**Services:** Android app development, iOS app development, \
-Web application & website development, UX/UI design.
+**Services:** Android app development, iOS app development, Web application & website \
+development, App Design, UX/UI design, Web Design.
 
 **Notable products:**
-- **FnO Bazar** — Stock market data visualization for F&O traders (Android + Web)
-- **AppLab** — EdTech platform for aspiring Android developers (video lectures + in-app IDE)
-- **LOA (Legend Outdoor Advertising)** — Mobile app for a leading outdoor advertising agency
+- **FnO Bazar** — Stock market data visualization and analysis for investors and F&O traders \
+(Android + Web platform). Zerostic is the dedicated technology partner behind FnO Bazar.
+- **AppLab** — EdTech platform for aspiring Android developers: curated video lectures and \
+an integrated in-app IDE to learn and build Android apps.
+- **LOA (Legend Outdoor Advertising)** — Mobile app for a leading outdoor advertising agency \
+with a distinguished position across India.
+- **Zerostic Studio** — Client portal at studio.zerostic.com for managing projects, payments, \
+invoices, contracts, and scheduled calls with the Zerostic team.
 
 **Contact:** support@zerostic.com | +91 8076376175
-**Careers & Internships:** zerostic.link/internship
-**Location:** Faridabad, Haryana, India"""
+**Instagram:** instagram.com/zerostic
+**Careers & Internships:** zerostic.link/internship (applications via Typeform)
+**Location:** Surajkund, Faridabad, Haryana, India"""
 
     return about
 
