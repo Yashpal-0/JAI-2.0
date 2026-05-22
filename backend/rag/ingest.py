@@ -82,26 +82,18 @@ def ingest(docs_dir: str = "docs", chroma_dir: str = "chroma_db") -> None:
     print(f"[SUCCESS] Ingested {len(chunks)} chunks from {len(raw_docs)} documents into {chroma_dir}.")
 
 
-def ingest_from_pages(pages: list, chroma_dir: str = "chroma_db") -> None:
+def ingest_from_pages(docs: list, chroma_dir: str = "chroma_db") -> None:
     """
-    Embed a list of scraped web pages into Chroma, replacing any previously
-    scraped content for those URLs.
+    Embed a list of LangChain Documents into Chroma, replacing any previously
+    scraped content.
 
-    pages: list of {"url": str, "title": str, "content": str}
+    docs: list[Document] — as returned by rag.crawler.fetch_zerostic_pages()
     """
-    from langchain_core.documents import Document
     from langchain_text_splitters import RecursiveCharacterTextSplitter
     from langchain_huggingface import HuggingFaceEmbeddings
     from langchain_chroma import Chroma
 
-    docs = [
-        Document(
-            page_content=p["content"],
-            metadata={"source": p["url"], "title": p.get("title", ""), "web_scraped": True},
-        )
-        for p in pages
-        if p.get("content")
-    ]
+    docs = [d for d in docs if d.page_content]
     if not docs:
         return
 

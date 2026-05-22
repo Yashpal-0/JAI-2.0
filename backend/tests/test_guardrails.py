@@ -48,7 +48,8 @@ def send(prompt: str) -> str:
 
 
 def is_refused(text: str) -> bool:
-    low = text.lower()
+    # Normalize curly apostrophes → straight so "can't" matches "can’t"
+    low = text.lower().replace("’", "'").replace("‘", "'")
     if any(sig in low for sig in REFUSE_SIGNALS):
         return True
     # Provider-level moderation (OpenRouter 403) is also a refusal

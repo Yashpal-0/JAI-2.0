@@ -7,7 +7,6 @@ About section when the cache is absent or stale.
 import json
 import time
 from pathlib import Path
-from typing import Any
 
 _CACHE_PATH = Path(__file__).parent / "company_cache.json"
 _CACHE_TTL = 24 * 3600  # seconds
@@ -73,12 +72,13 @@ def get_company_context_str() -> str:
     return _FALLBACK_ABOUT
 
 
-def _extract_about_section(pages: list[dict[str, Any]]) -> str:
+def _extract_about_section(pages: list) -> str:
     """Build a structured About section, enriched with the live website tagline."""
     if not pages:
         return _FALLBACK_ABOUT
 
-    text = pages[0].get("content", "")
+    first = pages[0]
+    text = first.page_content if hasattr(first, "page_content") else first.get("content", "")
     lines = [ln.strip() for ln in text.split("\n") if ln.strip()]
 
     # Look for the multi-word hero headline; zerostic.com splits it across short lines

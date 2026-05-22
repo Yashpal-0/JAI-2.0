@@ -1,68 +1,63 @@
 """
-Async BFS crawler for Zerostic public web properties.
+Async Playwright BFS crawler for Zerostic public web properties.
 
-Strategy:
-- BFS from seed URLs across all same-domain pages (no depth cap — exhaustive).
-- At each page, discover links and enqueue unvisited same-domain URLs.
-- Fetch up to MAX_CONCURRENT pages at a time to avoid hammering the server.
-- Crawl allow-listed external Zerostic properties (public portions only).
-- Skip URL patterns that indicate auth-gated content.
+Returns LangChain Document objects — plug directly into the LangChain
+text-splitter → embeddings → Chroma pipeline with no conversion step.
 
-Auth-gated pages (login, dashboard, account) are intentionally skipped:
-scraping them without credentials only returns a login redirect anyway,
-and scraping with credentials would expose private client data.
+Uses a real Chromium browser so any JS framework (React, Next.js, Vue,
+Angular, Svelte, …) renders fully before text/link extraction.
+Network-idle wait catches Firestore / REST data fetches before scraping.
 """
 import asyncio
 from collections import deque
-from typing import Any
 from urllib.parse import urljoin, urlparse
 
-import httpx
-from bs4 import BeautifulSoup
+from langchain_core.documents import Document
+from playwright.async_api import async_playwright, Browser, Page
 
 # ── Configuration ──────────────────────────────────────────────────────────────
 
-# BFS seeds — all public Zerostic domains; subpages auto-discovered
 _SEED_URLS = [
     "https://www.zerostic.com",
     "https://research.zerostic.com",
 ]
 
-# Extra Zerostic properties: public landing only, no BFS (CSR, auth-gated interiors)
+# Public landing pages only — no BFS (CSR apps with auth-gated interiors)
 _EXTRA_URLS = [
     "https://studio.zerostic.com",
 ]
 
-# Domains to BFS crawl (follow all discovered subpages)
+# Domains where all discovered subpages are BFS-crawled
 _CRAWL_DOMAINS = {"www.zerostic.com", "zerostic.com", "research.zerostic.com"}
 
-# Path fragments that indicate auth-gated or irrelevant pages — skip
+# Path fragments that signal auth-gated content — skip automatically
 _AUTH_PATH_FRAGMENTS = {
     "/login", "/signin", "/signup", "/register",
     "/dashboard", "/account", "/profile", "/settings",
     "/admin", "/api/", "/oauth", "/auth/",
 }
 
-# Skip file extensions that aren't HTML pages
-_SKIP_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".svg", ".webp",
-                    ".pdf", ".zip", ".css", ".js", ".woff", ".woff2", ".ttf"}
+_SKIP_EXTENSIONS = {
+    ".jpg", ".jpeg", ".png", ".gif", ".svg", ".webp",
+    ".pdf", ".zip", ".css", ".js", ".woff", ".woff2", ".ttf",
+}
 
-MAX_CONCURRENT = 5   # simultaneous in-flight requests
-MAX_PAGES = 100      # safety cap — zerostic.com is small but guard anyway
+# Per-domain: CSS selector to wait for before extracting content.
+# Use when the page loads dynamic data (Firestore, REST) after networkidle.
+_DYNAMIC_WAIT_SELECTORS: dict[str, str] = {
+    "research.zerostic.com": "a[href*='/surveys/']",
+}
 
-_HEADERS = {"User-Agent": "JAI/2.0 (+https://zerostic.com)"}
+_CHROME_EXECUTABLE = "/usr/bin/google-chrome"
+MAX_CONCURRENT = 3
+MAX_PAGES = 100
 
-# ── Helpers ────────────────────────────────────────────────────────────────────
+# ── URL helpers ────────────────────────────────────────────────────────────────
 
 _INDEX_SUFFIXES = ("/index.html", "/index.htm", "/index.php")
-_META_NAMES = frozenset((
-    "description", "keywords", "og:description", "og:title",
-    "twitter:description", "twitter:title",
-))
 
 
 def _normalise(url: str) -> str:
-    """Strip fragment, trailing slash, common index filenames for dedup."""
     p = urlparse(url)
     path = p.path.rstrip("/")
     for suf in _INDEX_SUFFIXES:
@@ -86,107 +81,138 @@ def _is_crawlable(url: str) -> bool:
     return True
 
 
-def _extract_links(base_url: str, soup: BeautifulSoup) -> list[str]:
-    found = []
-    for tag in soup.find_all("a", href=True):
-        href = tag["href"].strip()
-        if not href or href.startswith(("#", "javascript:", "mailto:", "tel:")):
-            continue
-        absolute = urljoin(base_url, href)
-        if _is_crawlable(absolute):
-            found.append(_normalise(absolute))
-    return list(dict.fromkeys(found))
+# ── Page fetch → LangChain Document ───────────────────────────────────────────
 
-
-def _extract_meta(soup: BeautifulSoup) -> str:
-    parts = []
-    for tag in soup.find_all("meta"):
-        name = (tag.get("name") or tag.get("property") or "").lower()
-        content = (tag.get("content") or "").strip()
-        if name in _META_NAMES and content:
-            parts.append(f"{name}: {content}")
-    return "\n".join(parts)
-
-
-async def _fetch_one(
-    client: httpx.AsyncClient,
+async def _fetch_page(
+    browser: Browser,
     url: str,
     follow_links: bool = True,
-) -> tuple[dict[str, Any] | None, list[str]]:
+) -> tuple[Document | None, list[str]]:
     """
-    Fetch one URL.
-    Returns (page_dict_or_None, discovered_links).
-    discovered_links is empty when follow_links=False.
+    Render url with Playwright, extract content as a LangChain Document.
+    Returns (Document | None, discovered_links).
     """
+    page: Page = await browser.new_page()
     try:
-        resp = await client.get(url, headers=_HEADERS)
-        resp.raise_for_status()
-        soup = BeautifulSoup(resp.text, "html.parser")
-        links = _extract_links(url, soup) if follow_links else []
-        meta_text = _extract_meta(soup)
-        for tag in soup(["script", "style", "noscript", "svg", "img"]):
-            tag.decompose()
-        title = soup.title.get_text(strip=True) if soup.title else url
-        body = soup.get_text(separator="\n", strip=True)
-        # CSR pages: body is nearly empty — fall back to meta tags
-        content = body if len(body) >= 200 else f"{body}\n\n[Meta]\n{meta_text}".strip()
-        print(f"[crawler] {url} ({len(content)} chars)")
-        return {"url": url, "title": title, "content": content}, links
+        await page.goto(url, wait_until="domcontentloaded", timeout=30_000)
+
+        # Wait for network to settle (REST / Firestore data fetches)
+        try:
+            await page.wait_for_load_state("networkidle", timeout=8_000)
+        except Exception:
+            pass
+
+        # Per-domain selector wait for late-loading dynamic content
+        domain = urlparse(url).netloc
+        if domain in _DYNAMIC_WAIT_SELECTORS:
+            try:
+                await page.wait_for_selector(
+                    _DYNAMIC_WAIT_SELECTORS[domain], timeout=10_000
+                )
+            except Exception:
+                pass
+
+        # Clone body, strip noise, extract ALL text (including off-screen sections)
+        text: str = await page.evaluate("""() => {
+            const clone = document.body.cloneNode(true);
+            clone.querySelectorAll(
+                'script, style, noscript, svg, link, meta, iframe'
+            ).forEach(el => el.remove());
+            return clone.textContent;
+        }""")
+        text = " ".join(text.split())
+
+        title: str = await page.title()
+
+        # If body is sparse, supplement with meta description
+        meta_desc: str = await page.evaluate(
+            "() => (document.querySelector('meta[name=description]') || {}).content || ''"
+        )
+        if len(text) < 200 and meta_desc:
+            text = f"{text} [Meta description: {meta_desc}]".strip()
+
+        doc = Document(
+            page_content=text,
+            metadata={"source": url, "title": title, "web_scraped": True},
+        )
+
+        # Discover links from the rendered DOM (catches React-router hrefs)
+        links: list[str] = []
+        if follow_links:
+            raw: list[str] = await page.evaluate(
+                "() => [...document.querySelectorAll('a[href]')].map(a => a.href)"
+            )
+            for href in raw:
+                if href and not href.startswith(("javascript:", "mailto:", "tel:", "#")):
+                    absolute = urljoin(url, href)
+                    if _is_crawlable(absolute):
+                        links.append(_normalise(absolute))
+            links = list(dict.fromkeys(links))
+
+        print(f"[crawler] {url} ({len(text)} chars, {len(links)} links)")
+        return doc, links
+
     except Exception as e:
         print(f"[crawler] Failed {url}: {e}")
         return None, []
+    finally:
+        await page.close()
 
 
 # ── Public entry point ─────────────────────────────────────────────────────────
 
-async def fetch_zerostic_pages() -> list[dict[str, Any]]:
+async def fetch_zerostic_pages() -> list[Document]:
     """
-    BFS crawl all public Zerostic pages.
-
-    Starts from _SEED_URLS, follows every discovered same-domain link
-    (skipping auth-gated paths), then fetches _EXTRA_URLS without further
-    BFS (those are external properties where we only want the landing page).
+    BFS crawl all public Zerostic pages using headless Chromium.
+    Returns LangChain Document objects ready for the splitter → Chroma pipeline.
+    Handles any JS framework — React, Next.js, Vue, Angular, etc.
     """
-    visited: set[str] = set()
-    queue: deque[str] = deque(_normalise(u) for u in _SEED_URLS)
-    pages: list[dict[str, Any]] = []
-
-    async with httpx.AsyncClient(timeout=30, follow_redirects=True) as client:
-
-        # ── BFS over zerostic.com ──────────────────────────────────────────────
-        semaphore = asyncio.Semaphore(MAX_CONCURRENT)
-
-        async def fetch_with_sem(url: str):
-            async with semaphore:
-                return await _fetch_one(client, url, follow_links=True)
-
-        while queue and len(pages) < MAX_PAGES:
-            # Drain the current wave concurrently
-            wave = []
-            while queue and len(wave) < MAX_CONCURRENT:
-                url = queue.popleft()
-                if url not in visited:
-                    visited.add(url)
-                    wave.append(url)
-
-            if not wave:
-                break
-
-            results = await asyncio.gather(*[fetch_with_sem(u) for u in wave])
-            for page, links in results:
-                if page:
-                    pages.append(page)
-                for link in links:
-                    if link not in visited:
-                        queue.append(link)
-
-        # ── Extra allow-listed external pages (landing only) ──────────────────
-        extra_results = await asyncio.gather(
-            *[_fetch_one(client, u, follow_links=False) for u in _EXTRA_URLS]
+    async with async_playwright() as pw:
+        browser = await pw.chromium.launch(
+            executable_path=_CHROME_EXECUTABLE,
+            headless=True,
+            args=["--no-sandbox", "--disable-dev-shm-usage"],
         )
-        for page, _ in extra_results:
-            if page and page["url"] not in {p["url"] for p in pages}:
-                pages.append(page)
+        try:
+            visited: set[str] = set()
+            queue: deque[str] = deque(_normalise(u) for u in _SEED_URLS)
+            docs: list[Document] = []
+            semaphore = asyncio.Semaphore(MAX_CONCURRENT)
 
-    print(f"[crawler] Total: {len(pages)} page(s) fetched")
-    return pages
+            async def fetch_sem(url: str, follow: bool = True):
+                async with semaphore:
+                    return await _fetch_page(browser, url, follow_links=follow)
+
+            # ── BFS over all crawlable domains ─────────────────────────────────
+            while queue and len(docs) < MAX_PAGES:
+                wave: list[str] = []
+                while queue and len(wave) < MAX_CONCURRENT:
+                    url = queue.popleft()
+                    if url not in visited:
+                        visited.add(url)
+                        wave.append(url)
+                if not wave:
+                    break
+
+                results = await asyncio.gather(*[fetch_sem(u) for u in wave])
+                for doc, links in results:
+                    if doc:
+                        docs.append(doc)
+                    for link in links:
+                        if link not in visited:
+                            queue.append(link)
+
+            # ── Extra properties: public landing only ──────────────────────────
+            visited_urls = {d.metadata["source"] for d in docs}
+            extra = await asyncio.gather(
+                *[fetch_sem(u, follow=False) for u in _EXTRA_URLS]
+            )
+            for doc, _ in extra:
+                if doc and doc.metadata["source"] not in visited_urls:
+                    docs.append(doc)
+
+        finally:
+            await browser.close()
+
+    print(f"[crawler] Total: {len(docs)} document(s) fetched")
+    return docs
