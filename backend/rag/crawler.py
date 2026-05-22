@@ -22,18 +22,19 @@ from bs4 import BeautifulSoup
 
 # ── Configuration ──────────────────────────────────────────────────────────────
 
-# BFS seeds — full zerostic.com domain will be discovered from here
+# BFS seeds — all public Zerostic domains; subpages auto-discovered
 _SEED_URLS = [
     "https://www.zerostic.com",
+    "https://research.zerostic.com",
 ]
 
-# Extra Zerostic properties to include (public landing page only, not BFS'd)
+# Extra Zerostic properties: public landing only, no BFS (CSR, auth-gated interiors)
 _EXTRA_URLS = [
     "https://studio.zerostic.com",
 ]
 
 # Domains to BFS crawl (follow all discovered subpages)
-_CRAWL_DOMAINS = {"www.zerostic.com", "zerostic.com"}
+_CRAWL_DOMAINS = {"www.zerostic.com", "zerostic.com", "research.zerostic.com"}
 
 # Path fragments that indicate auth-gated or irrelevant pages — skip
 _AUTH_PATH_FRAGMENTS = {

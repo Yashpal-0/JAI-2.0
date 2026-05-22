@@ -31,6 +31,8 @@ an integrated in-app IDE to learn and build Android apps.
 with a distinguished position across India.
 - **Zerostic Studio** — Client portal at studio.zerostic.com for managing projects, payments, \
 invoices, contracts, and scheduled calls with the Zerostic team.
+- **Zerostic Research** — Public research platform at research.zerostic.com for hosting and \
+participating in academic and industry surveys ("Empowering Research Through Insights").
 
 **Contact:** support@zerostic.com | +91 8076376175
 **Instagram:** instagram.com/zerostic
@@ -84,6 +86,8 @@ def _extract_about_section(pages: list[dict[str, Any]]) -> str:
     text_lower = text.lower()
     if "empowering" in text_lower and "digital" in text_lower:
         tagline = "Empowering Your Digital Experience"
+    elif "empowering" in text_lower and "research" in text_lower:
+        tagline = "Empowering Research Through Insights"
 
     about = "## About Zerostic\n"
     if tagline:
@@ -102,6 +106,8 @@ an integrated in-app IDE to learn and build Android apps.
 with a distinguished position across India.
 - **Zerostic Studio** — Client portal at studio.zerostic.com for managing projects, payments, \
 invoices, contracts, and scheduled calls with the Zerostic team.
+- **Zerostic Research** — Public research platform at research.zerostic.com for hosting and \
+participating in academic and industry surveys ("Empowering Research Through Insights").
 
 **Contact:** support@zerostic.com | +91 8076376175
 **Instagram:** instagram.com/zerostic
