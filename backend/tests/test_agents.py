@@ -1,3 +1,4 @@
+import asyncio
 import pytest
 from langchain_core.messages import HumanMessage, AIMessage
 
@@ -23,40 +24,6 @@ def make_fake_llm(response_content: str = "I can help with that.", tool_calls: l
     return _FakeLLM()
 
 
-def test_pm_agent_graph_compiles():
-    from agents.pm_agent import build_pm_agent
-    graph = build_pm_agent(llm=make_fake_llm())
-    assert graph is not None
-
-
-def test_pm_agent_returns_ai_message():
-    from agents.pm_agent import build_pm_agent
-    graph = build_pm_agent(llm=make_fake_llm("I'll scope your project."))
-    result = graph.invoke(
-        {"messages": [HumanMessage(content="Scope a web project")], "user_id": "u1", "tenant_id": "studio.zerostic.com"},
-        config={"configurable": {"user_id": "u1", "tenant_id": "studio.zerostic.com"}},
-    )
-    last_message = result["messages"][-1]
-    assert isinstance(last_message, AIMessage)
-    assert last_message.content != ""
-
-
-def test_dev_agent_graph_compiles():
-    from agents.dev_agent import build_dev_agent
-    graph = build_dev_agent(llm=make_fake_llm())
-    assert graph is not None
-
-
-def test_dev_agent_returns_ai_message():
-    from agents.dev_agent import build_dev_agent
-    graph = build_dev_agent(llm=make_fake_llm("Here's a hint for your IDE error."))
-    result = graph.invoke(
-        {"messages": [HumanMessage(content="I have a missing semicolon error")], "user_id": "u1", "tenant_id": "dev.zerostic.com"},
-        config={"configurable": {"user_id": "u1", "tenant_id": "dev.zerostic.com"}},
-    )
-    last_message = result["messages"][-1]
-    assert isinstance(last_message, AIMessage)
-
 
 def test_analytics_agent_graph_compiles():
     from agents.analytics_agent import build_analytics_agent
@@ -67,10 +34,10 @@ def test_analytics_agent_graph_compiles():
 def test_analytics_agent_returns_ai_message():
     from agents.analytics_agent import build_analytics_agent
     graph = build_analytics_agent(llm=make_fake_llm("Market watcher set for NIFTY."))
-    result = graph.invoke(
-        {"messages": [HumanMessage(content="Watch NIFTY above 20000")], "user_id": "u1", "tenant_id": "studio.zerostic.com"},
-        config={"configurable": {"user_id": "u1", "tenant_id": "studio.zerostic.com"}},
-    )
+    result = asyncio.run(graph.ainvoke(
+        {"messages": [HumanMessage(content="Watch NIFTY above 20000")], "user_id": "u1", "tenant_id": "zerostic.com"},
+        config={"configurable": {"user_id": "u1", "tenant_id": "zerostic.com"}},
+    ))
     last_message = result["messages"][-1]
     assert isinstance(last_message, AIMessage)
 
@@ -79,8 +46,6 @@ def test_orchestrator_graph_compiles():
     from agents.orchestrator import build_orchestrator
     graph = build_orchestrator(
         llm=make_fake_llm(),
-        pm_graph=build_pm_agent_stub(),
-        dev_graph=build_dev_agent_stub(),
         analytics_graph=build_analytics_agent_stub(),
     )
     assert graph is not None
@@ -90,25 +55,13 @@ def test_orchestrator_routes_and_returns_response():
     from agents.orchestrator import build_orchestrator
     graph = build_orchestrator(
         llm=make_fake_llm("I'll help you with your request."),
-        pm_graph=build_pm_agent_stub(),
-        dev_graph=build_dev_agent_stub(),
         analytics_graph=build_analytics_agent_stub(),
     )
     result = graph.invoke(
-        {"messages": [HumanMessage(content="Hello")], "user_id": "u1", "tenant_id": "studio.zerostic.com"},
-        config={"configurable": {"user_id": "u1", "tenant_id": "studio.zerostic.com", "thread_id": "test-thread"}},
+        {"messages": [HumanMessage(content="Hello")], "user_id": "u1", "tenant_id": "zerostic.com"},
+        config={"configurable": {"user_id": "u1", "tenant_id": "zerostic.com", "thread_id": "test-thread"}},
     )
     assert len(result["messages"]) >= 2
-
-
-def build_pm_agent_stub():
-    from agents.pm_agent import build_pm_agent
-    return build_pm_agent(llm=make_fake_llm("PM handled it."))
-
-
-def build_dev_agent_stub():
-    from agents.dev_agent import build_dev_agent
-    return build_dev_agent(llm=make_fake_llm("Dev handled it."))
 
 
 def build_analytics_agent_stub():

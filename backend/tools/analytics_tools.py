@@ -147,7 +147,7 @@ def cross_ecosystem_context_weaver(
     actions_taken = []
     if "high sleep friction" in trigger_event.lower() or "high snooze" in trigger_event.lower():
         actions_taken.append("Elevated risk threshold on FnO Bazar profile due to high morning biometric exhaustion.")
-        actions_taken.append("Automatically queued a 1-day extension request on outstanding Jira tickets in Zerostic Studio.")
+        actions_taken.append("Automatically queued a 1-day extension request on outstanding Jira tickets in Zerostic.")
     else:
         actions_taken.append("Standardized cross-ecosystem synchronization complete. Normal operations.")
 

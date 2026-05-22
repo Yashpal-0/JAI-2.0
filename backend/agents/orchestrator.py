@@ -297,7 +297,7 @@ Use tools to fetch live client data or perform actions. Always prefer calling a 
 ## Tone and Style
 - Greet users by name when known.
 - Be professional, warm, and concise.
-- Always end responses with a nudge toward the relevant Zerostic product or next action (e.g. "You can set this up directly in Zerostic Studio", "FnO Bazar has a trigger for exactly this", "Book a call at /scheduler to discuss further").
+- Always end responses with a nudge toward the relevant Zerostic product or next action (e.g. "You can set this up directly in Zerostic", "FnO Bazar has a trigger for exactly this", "Book a call at /scheduler to discuss further").
 
 ## Interactive Workflow Protocol — MANDATORY
 
@@ -406,7 +406,7 @@ Response pattern: "I'm not able to help with that. My purpose is to assist you w
 Enforce strict tenant isolation. Never leak one tenant's user data to another. The tenant context is set per session and is immutable."""
 
 _COMING_SOON = (
-    "This feature isn't live yet. You can visit studio.zerostic.com directly "
+    "This feature isn't live yet. You can visit zerostic.com directly "
     "or email support@zerostic.com for assistance."
 )
 
@@ -418,29 +418,29 @@ def transfer_to_analytics_agent() -> str:
     return "Transferring to Analytics Agent"
 
 
-# ── Client data tools (stubs — implement by wiring to Studio API) ─────────────
+# ── Client data tools (stubs — implement by wiring to Zerostic API) ──────────
 
 @tool
 def get_client_projects(user_id: str, tenant_id: str) -> str:
-    """Fetch the client's projects from Zerostic Studio — active, completed, and in-review projects with status details."""
+    """Fetch the client's projects from Zerostic — active, completed, and in-review projects with status details."""
     return _COMING_SOON
 
 
 @tool
 def get_payment_history(user_id: str, tenant_id: str) -> str:
-    """Fetch the client's payment records from Zerostic Studio — all payments, statuses (confirmed/pending/rejected), and amounts."""
+    """Fetch the client's payment records from Zerostic — all payments, statuses (confirmed/pending/rejected), and amounts."""
     return _COMING_SOON
 
 
 @tool
 def get_invoices(user_id: str, tenant_id: str) -> str:
-    """Fetch the client's invoices from Zerostic Studio — invoice list with amounts, statuses, and download links."""
+    """Fetch the client's invoices from Zerostic — invoice list with amounts, statuses, and download links."""
     return _COMING_SOON
 
 
 @tool
 def get_contracts(user_id: str, tenant_id: str) -> str:
-    """Fetch the client's contracts from Zerostic Studio — contract list with signing status (pending/signed)."""
+    """Fetch the client's contracts from Zerostic — contract list with signing status (pending/signed)."""
     return _COMING_SOON
 
 
@@ -452,21 +452,21 @@ def get_account_status(user_id: str, tenant_id: str) -> str:
 
 @tool
 def get_notifications(user_id: str, tenant_id: str) -> str:
-    """Fetch the client's unread notifications from Zerostic Studio — account activity, project updates, payment status changes."""
+    """Fetch the client's unread notifications from Zerostic — account activity, project updates, payment status changes."""
     return _COMING_SOON
 
 
-# ── Action tools (stubs — implement by wiring to Studio API) ──────────────────
+# ── Action tools (stubs — implement by wiring to Zerostic API) ───────────────
 
 @tool
 def submit_quotation_request(user_id: str, tenant_id: str, project_title: str, description: str, budget_range: str = "", timeline: str = "") -> str:
-    """Submit a new project quotation request to the Zerostic team via Zerostic Studio."""
+    """Submit a new project quotation request to the Zerostic team."""
     return _COMING_SOON
 
 
 @tool
 def book_scheduler_call(user_id: str, tenant_id: str, call_type: str, preferred_datetime: str, notes: str = "") -> str:
-    """Book a call with the Zerostic team via the Studio Scheduler.
+    """Book a call with the Zerostic team via the Zerostic Scheduler.
     call_type: one of 'Project Consultation' (60min), 'Technical Discussion' (45min),
     'Demo/Presentation' (30min), 'Support Session' (30min), 'Other' (30min).
     preferred_datetime: ISO 8601 format. Available Mon-Fri 9AM-6PM IST, up to 30 days ahead."""
@@ -484,7 +484,7 @@ def create_prd_document(user_id: str, tenant_id: str, project_name: str, executi
 
 @tool
 def send_admin_message(user_id: str, tenant_id: str, subject: str, message: str) -> str:
-    """Send a message thread to the Zerostic admin team via Zerostic Studio Messages."""
+    """Send a message thread to the Zerostic admin team."""
     return _COMING_SOON
 
 

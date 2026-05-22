@@ -17,7 +17,7 @@ async def main():
 
     context = {
         "user_id": "terminal_user",
-        "tenant_id": "studio.zerostic.com",
+        "tenant_id": "zerostic.com",
         "thread_id": "main-session",
     }
 
