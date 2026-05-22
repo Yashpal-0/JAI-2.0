@@ -1,7 +1,9 @@
+import asyncio
 import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))
 
+from contextlib import asynccontextmanager, suppress
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -17,7 +19,30 @@ from config import SUPPORTED_TENANTS
 # get_graph() below builds a second independent instance for this server — both share no state.
 from agents.orchestrator import build_orchestrator
 
-app = FastAPI()
+_REFRESH_INTERVAL = 24 * 3600  # seconds
+
+
+async def _company_refresh_loop() -> None:
+    """Scrape zerostic.com on startup and refresh every 24 h."""
+    from rag.company_context import refresh_company_context
+    while True:
+        try:
+            await refresh_company_context()
+        except Exception as e:
+            print(f"[api] Company context refresh error: {e}")
+        await asyncio.sleep(_REFRESH_INTERVAL)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    task = asyncio.create_task(_company_refresh_loop())
+    yield
+    task.cancel()
+    with suppress(asyncio.CancelledError):
+        await task
+
+
+app = FastAPI(lifespan=lifespan)
 
 _CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",") if o.strip()]
 
