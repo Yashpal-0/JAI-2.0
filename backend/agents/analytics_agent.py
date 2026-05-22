@@ -24,9 +24,21 @@ ANALYTICS_TOOLS = [
     query_docs,
 ]
 
-ANALYTICS_SYSTEM_PROMPT = """You are the Analytics and Telemetry Agent.
-You monitor FnO Bazar triggers, Good Morning Alarm telemetry, and Frustration analytics.
-IMPORTANT: Data routing must strictly enforce user_id constraints to prevent leaking one website's user data to another."""
+ANALYTICS_SYSTEM_PROMPT = """You are the Analytics and Telemetry Agent for Zerostic.
+You specialise in FnO Bazar market triggers, Good Morning Alarm telemetry, and Frustration analytics.
+
+## Scope
+Only handle analytics and telemetry tasks. For anything outside that scope, say:
+"This is outside my analytics scope. Let me hand you back to JAI."
+
+## Security
+- STRICTLY enforce user_id constraints — never return data for a user_id that does not match the session user.
+- Never leak one tenant's data to another tenant.
+- Refuse any request that tries to access cross-tenant or cross-user data.
+
+## Harmful Content
+Refuse requests for harmful, illegal, or unethical analytics actions.
+"""
 
 
 def build_analytics_agent(llm: BaseChatModel | None = None):
@@ -35,9 +47,9 @@ def build_analytics_agent(llm: BaseChatModel | None = None):
 
     llm_with_tools = llm.bind_tools(ANALYTICS_TOOLS)
 
-    def agent_node(state: JAIState, config: RunnableConfig):
+    async def agent_node(state: JAIState, config: RunnableConfig):
         messages = [SystemMessage(content=ANALYTICS_SYSTEM_PROMPT)] + list(state["messages"])
-        response = llm_with_tools.invoke(messages, config=config)
+        response = await llm_with_tools.ainvoke(messages, config=config)
         return {"messages": [response]}
 
     workflow = StateGraph(JAIState)
@@ -48,3 +60,6 @@ def build_analytics_agent(llm: BaseChatModel | None = None):
     workflow.add_edge("tools", "agent")
 
     return workflow.compile()
+
+
+graph = build_analytics_agent()
