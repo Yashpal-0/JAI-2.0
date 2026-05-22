@@ -10,24 +10,36 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from langchain_core.messages import HumanMessage, AIMessageChunk
+from langchain_core.messages import HumanMessage, AIMessage, AIMessageChunk
 
 from config import SUPPORTED_TENANTS
+# Note: importing orchestrator triggers module-level `graph = build_orchestrator()` (for langgraph dev).
+# get_graph() below builds a second independent instance for this server — both share no state.
 from agents.orchestrator import build_orchestrator
 
 app = FastAPI()
 
+_CORS_ORIGINS = [o.strip() for o in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=_CORS_ORIGINS,
     allow_methods=["POST", "OPTIONS"],
     allow_headers=["Content-Type"],
 )
 
 
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
+
 @lru_cache(maxsize=1)
 def get_graph():
     return build_orchestrator()
+
+
+MAX_MESSAGE_LENGTH = 4000
 
 
 class ChatRequest(BaseModel):
@@ -42,6 +54,12 @@ async def chat(req: ChatRequest, graph=Depends(get_graph)):
     if req.tenant_id not in SUPPORTED_TENANTS:
         raise HTTPException(status_code=400, detail=f"Invalid tenant_id: {req.tenant_id}")
 
+    message = req.message.strip()
+    if not message:
+        raise HTTPException(status_code=400, detail="message cannot be empty")
+    if len(message) > MAX_MESSAGE_LENGTH:
+        raise HTTPException(status_code=400, detail=f"message exceeds {MAX_MESSAGE_LENGTH} characters")
+
     async def event_stream():
         try:
             config = {
@@ -53,15 +71,15 @@ async def chat(req: ChatRequest, graph=Depends(get_graph)):
             }
             async for chunk, metadata in graph.astream(
                 {
-                    "messages": [HumanMessage(content=req.message)],
+                    "messages": [HumanMessage(content=message)],
                     "user_id": req.user_id,
                     "tenant_id": req.tenant_id,
                 },
                 config=config,
                 stream_mode="messages",
             ):
-                if isinstance(chunk, AIMessageChunk) and chunk.content:
-                    yield f"data: {chunk.content.replace(chr(10), ' ')}\n\n"
+                if isinstance(chunk, (AIMessageChunk, AIMessage)) and chunk.content:
+                    yield f"data: {chunk.content.replace(chr(10), chr(92) + 'n')}\n\n"
             yield "data: [DONE]\n\n"
         except Exception as e:
             yield f"event: error\ndata: {str(e).replace(chr(10), ' ')}\n\n"
