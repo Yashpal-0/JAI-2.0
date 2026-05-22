@@ -1,6 +1,7 @@
 # LangChain + LangGraph
 langchain
 langgraph
+langgraph-cli[inmem]
 langchain-openai
 langchain-community
 langchain-chroma
