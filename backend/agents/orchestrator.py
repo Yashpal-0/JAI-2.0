@@ -4,8 +4,8 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import AIMessage, BaseMessage, SystemMessage
 from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import tool
-from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import StateGraph, START, END
+from agents.guards import input_guard_node, output_guard_node
 from langgraph.prebuilt import ToolNode
 from langgraph.types import Command
 
@@ -524,6 +524,7 @@ TOOL_TO_NODE = {
 def build_orchestrator(
     llm: BaseChatModel | None = None,
     analytics_graph=None,
+    checkpointer=None,
 ):
     if llm is None:
         llm = get_llm()
@@ -534,7 +535,7 @@ def build_orchestrator(
 
     llm_with_tools = llm.bind_tools(ALL_TOOLS)
 
-    def orchestrator_node(state: JAIState, config: RunnableConfig) -> Command[Literal["analytics_agent", "tools", "__end__"]]:
+    def orchestrator_node(state: JAIState, config: RunnableConfig) -> Command[Literal["analytics_agent", "tools", "output_guard"]]:
         all_messages = list(state["messages"])
 
         user_messages = [m for m in all_messages if hasattr(m, "type") and m.type == "human"]
@@ -543,7 +544,10 @@ def build_orchestrator(
         # Short-circuit: return hardcoded step question without calling the LLM
         hardcoded = _get_hardcoded_step_response(all_messages)
         if hardcoded:
-            return Command(goto=END, update={"messages": [AIMessage(content=hardcoded)]})
+            return Command(
+                goto="output_guard",
+                update={"messages": [AIMessage(content=hardcoded)], "rag_context": ""},
+            )
 
         rag_context = build_rag_context(last_query) if last_query else ""
         base_prompt = _build_system_prompt()
@@ -561,7 +565,10 @@ def build_orchestrator(
         response = llm_with_tools.invoke(messages, config=config)
 
         if not response.tool_calls:
-            return Command(goto=END, update={"messages": [response]})
+            return Command(
+                goto="output_guard",
+                update={"messages": [response], "rag_context": rag_context},
+            )
 
         tool_name = response.tool_calls[0]["name"]
 
@@ -572,20 +579,23 @@ def build_orchestrator(
                     "messages": [response],
                     "user_id": state.get("user_id", ""),
                     "tenant_id": state.get("tenant_id", ""),
+                    "rag_context": rag_context,
                 },
             )
 
-        return Command(goto="tools", update={"messages": [response]})
+        return Command(goto="tools", update={"messages": [response], "rag_context": rag_context})
 
     workflow = StateGraph(JAIState)
+    workflow.add_node("input_guard", input_guard_node)
     workflow.add_node("orchestrator", orchestrator_node)
     workflow.add_node("tools", ToolNode(ACTION_TOOLS))
     workflow.add_node("analytics_agent", analytics_graph)
-    workflow.add_edge(START, "orchestrator")
+    workflow.add_node("output_guard", output_guard_node)
+    workflow.add_edge(START, "input_guard")
     workflow.add_edge("tools", "orchestrator")
-    workflow.add_edge("analytics_agent", END)
+    workflow.add_edge("analytics_agent", "output_guard")
 
-    return workflow.compile(checkpointer=MemorySaver())
+    return workflow.compile(checkpointer=checkpointer)
 
 
 graph = build_orchestrator()
