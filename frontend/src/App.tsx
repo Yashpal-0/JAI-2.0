@@ -65,9 +65,9 @@ export default function App() {
   const handleDeleteThread = useCallback(async (id: string) => {
     await apiDeleteThread(id, USER_ID)
     localStorage.removeItem(`jai_msgs_${id}`)
-    setThreads(prev => prev.filter(t => t.id !== id))
+    const remaining = threads.filter(t => t.id !== id)
+    setThreads(remaining)
     if (id === currentId) {
-      const remaining = threads.filter(t => t.id !== id)
       setCurrentId(remaining[0]?.id ?? crypto.randomUUID())
     }
   }, [currentId, threads])

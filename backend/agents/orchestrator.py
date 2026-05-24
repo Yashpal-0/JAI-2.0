@@ -31,8 +31,7 @@ _COMING_SOON = (
 
 
 def _build_system_prompt() -> str:
-    from rag.company_context import get_company_context_str
-    return _JAI_INSTRUCTIONS.replace("{about}", get_company_context_str())
+    return _JAI_INSTRUCTIONS
 
 
 # ── Sub-agent routing ──────────────────────────────────────────────────────────

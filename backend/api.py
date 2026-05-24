@@ -24,8 +24,8 @@ _CHROMA_DIR = os.path.join(os.path.dirname(__file__), "chroma_db")
 
 
 def _ingest_local_docs() -> None:
-    from rag.ingest import ingest_local_files
-    ingest_local_files(docs_dir=_DOCS_DIR, chroma_dir=_CHROMA_DIR)
+    from rag.ingest import ingest
+    ingest(docs_dir=_DOCS_DIR, chroma_dir=_CHROMA_DIR)
 
 
 @asynccontextmanager

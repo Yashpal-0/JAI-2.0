@@ -29,6 +29,7 @@ export function useChat(tenant: string, userId: string, threadId: string) {
   const [isStreaming, setIsStreaming] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const abortControllerRef = useRef<AbortController | null>(null)
+  const isFirstRef = useRef(true)
 
   // Switch thread: abort in-flight, load from cache or backend
   useEffect(() => {
@@ -39,16 +40,19 @@ export function useChat(tenant: string, userId: string, threadId: string) {
     const cached = getCached(threadId)
     if (cached) {
       setMessages(cached)
+      isFirstRef.current = cached.length === 0
     } else {
       setMessages([])
+      isFirstRef.current = true
       fetchMessages(threadId, userId, tenant).then(msgs => {
         if (msgs.length > 0) {
           setMessages(msgs)
           cacheMessages(threadId, msgs)
+          isFirstRef.current = false
         }
       })
     }
-  }, [threadId, userId])
+  }, [threadId, userId, tenant])
 
   // Keep localStorage cache in sync
   useEffect(() => {
@@ -73,7 +77,8 @@ export function useChat(tenant: string, userId: string, threadId: string) {
     abortControllerRef.current = abortController
 
     try {
-      const isFirst = messages.length === 0
+      const isFirst = isFirstRef.current
+      isFirstRef.current = false
       const response = await fetch('/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -143,7 +148,7 @@ export function useChat(tenant: string, userId: string, threadId: string) {
     } finally {
       setIsStreaming(false)
     }
-  }, [tenant, userId, threadId, isStreaming, messages.length])
+  }, [tenant, userId, threadId, isStreaming])
 
   return { messages, isStreaming, error, sendMessage }
 }
