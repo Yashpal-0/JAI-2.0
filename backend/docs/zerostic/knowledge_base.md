@@ -1,342 +1,305 @@
-# Zerostic — Complete Knowledge Base for JAI (Sales Agent)
-> **Source**: Deep research compiled from zerostic.com, DigitalOcean partner directory, Facebook, Google Play, Instagram, and other public sources.  
-> **Last Updated**: May 2026  
-> **Purpose**: RAG-ready reference document for JAI, Zerostic's AI sales agent.
+# Zerostic — Complete Knowledge Base for Sales Agent (JAI)
+
+> **Purpose:** RAG-ready reference document for JAI, Zerostic's AI sales agent. Covers company overview, all services, products, client work, industries, partnerships, and sales positioning. Pricing intentionally excluded.
 
 ---
 
 ## 1. Company Overview
 
-| Field | Details |
-|---|---|
-| **Company Name** | Zerostic |
-| **Tagline** | *"Empowering Your Digital Experience"* / *"Getting your business tech ready"* |
-| **Type** | Software Company / IT Solutions Provider |
-| **Founded** | Not publicly disclosed (active as of 2024–2026) |
-| **Headquarters** | Surajkund, Faridabad, Haryana, India |
-| **Website** | https://zerostic.com |
-| **Client Portal** | https://studio.zerostic.com |
-| **Email** | support@zerostic.com |
-| **Phone** | +91 8076376175 |
-| **Google Play** | https://play.google.com/store/apps/dev?id=7897768660657548664 |
-| **Instagram** | @zerostic |
-| **Facebook** | facebook.com/zerostic.tech |
-| **Twitter/X** | @ZerosticSupport |
-| **DigitalOcean Partner** | Yes — listed as an official IT Solution Provider |
+**Name:** Zerostic  
+**Website:** [https://zerostic.com](https://zerostic.com)  
+**Tagline:** *"Empowering Your Digital Experience"* / *"Wake up, Build up, Scale up"*  
+**Mission:** Getting businesses tech-ready — from idea to market-ready digital product.  
+**Headquarters:** B 21, Dayal Bagh, Surajkund, Sector 39, Faridabad, Haryana 121009, India  
+**Phone:** +91 80763 76175  
+**Email:** support@zerostic.com  
+**Language Support:** English, Hindi  
+
+Zerostic is an Indian technology company and IT solutions provider specialising in AI-driven software development, cloud infrastructure, DevOps, mobile app development, and digital transformation. The company works with both startups and enterprises, turning ideas into market-ready digital products through a structured, end-to-end approach.
+
+Zerostic describes itself as "more than just a business — a passionate team dedicated to providing the best service and products to our customers." The company has a presence across web, mobile, and cloud domains, and is also active in the app consumer space through its own published Android applications.
 
 ---
 
-## 2. Brand Identity & Mission
+## 2. Core Service Philosophy
 
-Zerostic positions itself as a **passionate, customer-first technology company** that turns ideas into market-ready digital products. Their core philosophy:
+Zerostic takes clients through a clear three-step journey for product development:
 
-> *"We are more than just a business — we are a passionate team dedicated to providing the best service and products to our customers."*
+1. **Product Research** — Pressure-testing concepts with real market data so clients build what customers actually need.
+2. **Product Development** — Design and engineering team shapes sleek, user-centric experiences that scale with the client's vision.
+3. **Product Deployment** — Launch strategy, app store submissions, cloud hosting, and ongoing support.
 
-Their value proposition is built around a **clear, three-step journey** from concept to launch:
-
-1. **Product Research** — Pressure-test the concept with real market data, so clients build what customers actually need.
-2. **Product Development** — Design & development team shapes sleek, user-centric experiences that scale with the client's vision.
-3. **Product Deployment** — End-to-end launch strategy, from going live to scaling user acquisition.
-
-This pipeline is particularly appealing to **founders with an idea but no technical team**, as Zerostic handles the entire lifecycle.
+This end-to-end model means Zerostic can be a single partner from napkin sketch to live product.
 
 ---
 
-## 3. Core Services
+## 3. Services
 
-### 3.1 Mobile App Development
-Zerostic builds native and cross-platform mobile apps for both **Android and iOS**.
+### 3.1 Application Development
+Zerostic builds full-stack applications — web and mobile — tailored to client requirements. The team handles the complete development lifecycle including UI/UX design, backend engineering, API integration, testing, and deployment.
 
-- **Android App Development**: Native Android apps using modern tooling; delivered to the Google Play Store.
-- **iOS App Development**: Native iOS apps designed and deployed to the Apple App Store.
-- **App Design & UX**: User-centered interface design that prioritizes usability, engagement, and retention.
-- **In-App Features**: API integrations, real-time data, push notifications, in-app purchases, authentication, etc.
+### 3.2 Android App Development
+Zerostic develops native Android applications. Deliverables include:
+- Native Android app (Java/Kotlin)
+- Push notifications
+- API integration
+- App submission support (Google Play Store)
 
-*Ideal for*: Startups, SMEs, and enterprises wanting a polished mobile presence.
+This is one of Zerostic's flagship service lines, backed by in-house apps they have published on the Play Store themselves.
 
----
+### 3.3 iOS App Development
+Zerostic builds native iOS applications for the Apple ecosystem. Deliverables include:
+- Native iOS app
+- Push notifications
+- API integration
+- App Store submission support
 
-### 3.2 Web Design & Website Development
-Full-cycle website and web application development.
+### 3.4 Website Development
+Zerostic designs and develops websites for businesses ranging from simple static pages to complex web platforms. Deliverables typically include:
+- Responsive design (mobile-friendly)
+- Custom domain setup
+- Basic SEO configuration
+- Analytics integration
 
-- **Web Design**: Responsive, pixel-perfect UI/UX design.
-- **Website Development**: From landing pages and corporate websites to full-featured web apps.
-- **E-Commerce Development**: Online stores and shopping experiences.
-- **CMS Integration**: Content management systems for non-technical teams to manage content.
+### 3.5 App Design & UX Design
+Zerostic provides dedicated app design and UX design services. The team creates user-centric experiences focused on usability, aesthetics, and scalability. This covers wireframing, prototyping, UI kit creation, and full visual design for both mobile and web products.
 
-*Ideal for*: Businesses needing a digital storefront, lead-gen site, or SaaS web app.
+### 3.6 Web Design
+Custom web design services, creating visually compelling and functionally sound websites that reflect a brand's identity and convert visitors.
 
----
+### 3.7 Cloud Infrastructure Management
+As a DigitalOcean partner, Zerostic manages cloud infrastructure for clients — setting up, configuring, and monitoring cloud environments. This includes provisioning servers, managing networking, storage, and ensuring uptime and performance.
 
-### 3.3 Cloud & DevOps Services
-Zerostic is a **DigitalOcean Partner** offering comprehensive cloud infrastructure services:
+### 3.8 Cloud Migration Services
+Zerostic helps businesses move their existing applications and data from on-premise or legacy infrastructure to modern cloud environments. This includes assessment, planning, migration execution, and post-migration support.
 
-- **Cloud Infrastructure Management**: Setup, monitoring, and optimization of cloud environments.
-- **Cloud Migration Services**: Migrating legacy systems and on-prem infrastructure to the cloud.
-- **CI/CD Pipelines**: Continuous integration and continuous deployment automation.
-- **DevOps Engineering**: Bridging development and operations for faster, more reliable releases.
-- **Kubernetes Deployment**: Container orchestration for scalable, cloud-native apps.
-- **Kafka**: Event streaming and message queue infrastructure.
-- **Database Dev/Management**: Database design, optimization, and managed database services.
-- **Managed Web/App Hosting**: Reliable, managed hosting so clients don't worry about uptime.
+### 3.9 DevOps
+Zerostic offers full DevOps services:
+- CI/CD pipeline setup and management
+- Infrastructure as Code (IaC)
+- Automation of deployment workflows
+- Monitoring and alerting
+- Container orchestration (Kubernetes, Docker)
 
-*Ideal for*: Tech startups and enterprises needing scalable, modern infrastructure.
+### 3.10 CI/CD (Continuous Integration / Continuous Deployment)
+Zerostic sets up automated build and deployment pipelines that allow development teams to ship code faster and more reliably. This reduces manual errors and accelerates the software delivery lifecycle.
 
----
+### 3.11 Kubernetes Deployment
+Zerostic specialises in Kubernetes deployments for containerised applications. This includes cluster setup, workload configuration, scaling policies, and ongoing cluster management.
 
-### 3.4 AI-Driven Software Development
-Zerostic specializes in **AI-powered applications** as highlighted in their DigitalOcean partner profile:
+### 3.12 Database Development & Management
+Zerostic handles database architecture, development, and ongoing management. This covers relational and non-relational databases, optimisation, backups, and scaling strategies.
 
-- Building AI-powered applications tailored to business workflows.
-- Cloud-native AI solutions.
-- Integrating AI/ML into existing products.
-- Automation and intelligent data processing pipelines.
+### 3.13 Kafka (Event Streaming)
+Zerostic has expertise in Apache Kafka — an industry-standard distributed event streaming platform. This is used for building real-time data pipelines, event-driven architectures, and high-throughput messaging systems for enterprise clients.
 
-*Ideal for*: Businesses looking to embed AI into their products or operations.
+### 3.14 Managed Web/App Hosting
+Zerostic provides fully managed hosting for web applications and mobile backends — handling server setup, security, uptime, updates, and scaling, so clients can focus on their business.
 
----
+### 3.15 Software Development
+Custom software development for businesses across industries. Zerostic works with startups and enterprises to build AI-powered applications, cloud-native solutions, and custom business software.
 
-### 3.5 Digital Transformation
-End-to-end digital transformation consulting and execution:
+### 3.16 Digital Transformation
+Zerostic helps traditional businesses adopt modern digital tools, processes, and platforms. This includes moving manual workflows to automated digital systems, modernising tech stacks, and integrating AI into business operations.
 
-- Migrating offline or legacy business workflows to modern digital systems.
-- Building custom software to replace manual processes.
-- Technology strategy and roadmap planning.
-
----
-
-### 3.6 Software Development (Custom)
-Bespoke software engineered for specific business needs:
-
-- Enterprise software solutions.
-- SaaS platform development.
-- API development and third-party integrations.
-- Backend systems and microservices.
-
----
-
-## 4. Products & Own Platforms
-
-### 4.1 Zerostic Studio (`studio.zerostic.com`)
-- **Type**: Client Portal / SaaS Platform
-- **Description**: The ultimate destination for businesses to manage their engagement with Zerostic. Clients use Zerostic Studio to manage projects, track progress, handle payments, and communicate with the team.
-- **Key Features**: Project management dashboard, payment management, client-team collaboration.
-- **Who it's for**: Every Zerostic client gets access to Studio as their central hub.
+### 3.17 E-Commerce Development
+End-to-end e-commerce platform development, from product catalogue and cart systems to payment gateway integration, order management, and delivery tracking.
 
 ---
 
-### 4.2 AppLab
-- **Type**: EdTech Mobile Application
-- **Category**: Education Technology
-- **Description**: AppLab is Zerostic's own flagship EdTech product that **revolutionizes how aspiring developers learn Android app development**. It provides a dynamic learning platform combining:
-  - Curated **video lectures** on Android development.
-  - An integrated **in-app IDE** so learners can write and run code directly in the app.
-  - A hands-on, project-based learning journey.
-- **Unique Value**: Learners can go from zero to building real Android apps entirely within the AppLab environment — no need for a computer to get started.
-- **Target Users**: Students, self-learners, and aspiring Android developers in India and globally.
+## 4. Products
+
+### 4.1 Zerostic Studio
+**URL:** [https://studio.zerostic.com](https://studio.zerostic.com)  
+**Type:** Client Portal / SaaS Platform  
+**Description:** Zerostic Studio is described as "the ultimate destination for businesses looking to create world-class mobile apps and websites." It functions as a client portal for managing projects, payments, and more. Clients can use Studio to track the progress of their engagements with Zerostic, manage deliverables, and stay in sync with the Zerostic team.
+
+This portal represents Zerostic's commitment to transparency and professional project management for all client relationships.
 
 ---
 
-### 4.3 FnO Bazar (Android + Web Platform)
-- **Type**: Fintech / Stock Market Analytics Platform
-- **Available On**: Android (Google Play) + Web
-- **Google Play**: https://play.google.com/store/apps/details?id=com.zerostic.fnobazar.android
-- **Description**: FnO Bazar stands at the forefront of **stock market data visualization and analysis**, offering a comprehensive platform tailored for investors and traders. Key capabilities:
-  - Real-time **F&O (Futures & Options) data visualization**.
-  - Tools for options chain analysis during trading hours.
-  - Designed for both retail investors and active traders.
-- **Built By**: Zerostic as the technology partner — they collaborated closely with the FnO Bazar business to transform their vision into a fully functioning product.
-- **Target Users**: Stock market traders, options traders, financial analysts.
+### 4.2 Good Morning — Everyday Alarm (Consumer App)
+**Platform:** Android (Google Play Store)  
+**Package ID:** com.zerostic.goodmorning  
+**Rating:** 4.5 stars (19 reviews)  
+**Downloads:** 1,000+  
+**Category:** Productivity  
+**Content Rating:** Rated for 3+  
+**Last Updated:** September 22, 2024  
+
+**Description:**  
+Good Morning is Zerostic's own consumer Android application — a smart alarm clock app designed to help users build better sleep habits and more productive mornings.
+
+**Key Features:**
+- **Machine Learning-Powered Alarm Recommendations:** The app uses ML to recommend the perfect alarm time and settings based on user patterns.
+- **Effective Alarm Tones:** Multiple calming and effective alarm tones to ensure gentle but firm wake-ups.
+- **Dismiss Methods:** Various methods to control sleep habits, including a Barcode scan method (requires camera permission) that forces users to physically get up and scan a barcode to dismiss the alarm.
+- **Wake Up Check:** A post-alarm verification feature that ensures users don't fall back asleep after dismissing the alarm.
+- **Weather Forecast:** Uses location to display local weather upon waking (requires location permission).
+
+**What users say:**
+- *"This app has been really helpful in maintaining my sleep schedule. There are various methods to wake you up."*
+- *"Wake up check is very amazing. It is very easy to use and understand."*
+- *"It helped me improve my sleep schedule. Earlier I used to wake up late and now I wake up just on time."*
+
+**Monetisation:** Contains ads, includes in-app purchases.
 
 ---
 
-### 4.4 LOA — Legend Outdoor Advertising App
-- **Type**: Business Operations Mobile App
-- **Available On**: Android (Google Play)
-- **Google Play**: https://play.google.com/store/apps/details?id=com.legendadvt
-- **Description**: A mobile application built for **Legend Outdoor Advertising**, a renowned outdoor advertising agency that holds a distinguished position across India. Zerostic built this app to digitize and streamline LOA's operations.
-- **Client**: Legend Outdoor Advertising (prominent industry player in India)
-- **Demonstrates**: Zerostic's ability to serve established, large-scale enterprises in traditional industries.
+## 5. Client Work & Case Studies
+
+### 5.1 AppLab
+**Type:** EdTech Platform  
+AppLab revolutionises the education technology landscape, offering a dynamic platform for aspiring developers to master Android app development. Through a curated selection of video lectures and an integrated in-app IDE (Integrated Development Environment), users can learn programming and build apps directly within the platform. Zerostic built and delivered this product as a technology partner.
+
+### 5.2 FnO Bazar
+**Platform:** Android App + Web Platform  
+**Play Store:** Available on Google Play  
+FnO Bazar is a fintech platform focused on stock market data visualisation and analysis — built for investors and traders. It provides a comprehensive data platform tailored to the financial markets (specifically Futures & Options, i.e. FnO). Zerostic served as their dedicated technology partner, collaborating closely with the FnO Bazar team to transform their vision into a fully functional product across both mobile (Android) and web.
+
+### 5.3 Legend Outdoor Advertising (LOA) — Mobile Application
+**Platform:** Android  
+**Play Store:** com.legendadvt  
+LOA (Legend Outdoor Advertising) is a renowned outdoor advertising agency with a distinguished position in the industry across India. Zerostic built their mobile application, digitising field operations and client management for one of India's leading out-of-home advertising businesses. This project demonstrates Zerostic's capability to serve traditional industries with modern mobile technology.
 
 ---
 
-### 4.5 Good Morning — Everyday Alarm
-- **Type**: Consumer Mobile App
-- **Platform**: Android
-- **Description**: A consumer app by Zerostic on Google Play with 1,000+ downloads. A daily alarm and morning routine utility app.
-- **Significance**: Shows Zerostic's range — from B2B enterprise tools to consumer-facing apps.
+## 6. Industries Served
 
----
-
-## 5. Industries Served
-
-Zerostic works across a wide range of verticals:
+Zerostic has domain experience and client work spanning the following industries:
 
 | Industry | Notes |
 |---|---|
-| **E-Commerce & Retail** | Online stores, marketplace apps, retail platforms |
-| **Fintech** | Trading platforms (e.g., FnO Bazar), payment systems |
-| **Healthcare** | Digital health apps, patient management systems |
-| **Education (EdTech)** | E.g., AppLab — their own edtech product |
-| **Gaming** | Game apps and gaming platforms |
-| **Streaming** | Streaming app backends and platforms |
-| **Manufacturing** | Digital transformation of manufacturing workflows |
-| **Hospitality** | Booking, management, and hospitality apps |
-| **Logistics & Transportation** | Fleet management, delivery tracking |
-| **Energy & Utilities** | Operational software for energy sector |
-| **Legal** | Legal tech applications and document management |
-| **Advertising & Media** | e.g., Legend Outdoor Advertising (LOA) app |
+| **E-Commerce / Retail** | Full-stack e-commerce platforms, product apps |
+| **Fintech** | Stock market tools (FnO Bazar), financial data apps |
+| **EdTech** | App-based learning platforms (AppLab) |
+| **Outdoor Advertising / Media** | Field operations apps (LOA) |
+| **Gaming** | Listed industry partner |
+| **Healthcare** | Digital health platforms |
+| **Streaming** | Media streaming infrastructure |
+| **Manufacturing** | Digital transformation for manufacturing |
+| **Hospitality** | Guest experience and operations tools |
+| **Logistics & Transportation** | Fleet and supply chain apps |
+| **Energy & Utilities** | Infrastructure and monitoring solutions |
+| **Legal** | Digital workflow and document management |
 
 ---
 
-## 6. Target Clients
+## 7. Technology Partnerships
 
-Zerostic's ideal clients include:
+### DigitalOcean Partner
+Zerostic is a listed **IT Solution Provider partner on DigitalOcean's official partner directory**. This partnership validates Zerostic's expertise in cloud infrastructure, Kubernetes, managed hosting, and DevOps on DigitalOcean's platform.
 
-- **Startups** — Founders with an idea who need a full technology partner (from research → development → deployment).
-- **SMEs (Small and Medium Enterprises)** — Businesses looking to digitize operations or launch a digital product.
-- **Enterprises** — Large companies needing custom software, cloud infrastructure, or DevOps support.
-- **Individual Entrepreneurs / Solopreneurs** — Those with a "napkin sketch" idea who need a trusted team to execute.
+**Zerostic's DigitalOcean Partner Profile:**  
+[https://www.digitalocean.com/partners/directory/zerostic](https://www.digitalocean.com/partners/directory/zerostic)
 
-> *Zerostic explicitly markets itself to "startups and enterprises" looking to build AI-powered applications, cloud-native solutions, Kubernetes deployments, and custom software.*
-
----
-
-## 7. Technology Stack & Capabilities
-
-Based on their listed services and products, Zerostic works with:
-
-**Mobile**
-- Android (native Java/Kotlin)
-- iOS (native Swift/Objective-C)
-- Cross-platform frameworks (Flutter, React Native implied)
-
-**Web**
-- Frontend: Modern JavaScript frameworks (React, etc.)
-- Backend: Node.js, Python, Java, or other server-side stacks
-- E-Commerce: Custom builds and CMS integrations
-
-**Cloud & Infrastructure**
-- DigitalOcean (official partner)
-- Kubernetes for container orchestration
-- Apache Kafka for event streaming
-- CI/CD automation pipelines
-- Database management (SQL + NoSQL)
-
-**AI & Data**
-- AI-powered application development
-- Cloud-native AI integration
+This partnership means Zerostic clients can benefit from DigitalOcean's robust cloud infrastructure with Zerostic as the expert implementation and management partner.
 
 ---
 
-## 8. Client & Project Portfolio Highlights
+## 8. Target Client Profile
 
-| Project | Type | Outcome |
-|---|---|---|
-| **AppLab** | EdTech mobile app (own product) | Android learning platform with video lectures + in-app IDE |
-| **FnO Bazar** | Fintech analytics platform | Full Android app + Web, live on Google Play |
-| **LOA App** | Enterprise mobile app | Android app for India's leading outdoor ad agency |
-| **Good Morning Alarm** | Consumer app | 1,000+ downloads on Google Play |
-| **Zerostic Studio** | Client portal SaaS | Internal product for client project/payment management |
-
----
-
-## 9. Competitive Differentiators
-
-These are the key reasons a prospect should choose Zerostic over alternatives:
-
-1. **End-to-End Ownership**: Zerostic handles everything — research, design, development, deployment. No need to coordinate multiple agencies.
-2. **Proven Track Record**: Live products across Fintech (FnO Bazar), EdTech (AppLab), Advertising (LOA), and Consumer apps.
-3. **AI-Driven Approach**: Specializes in AI-powered applications, which is a major differentiator as businesses adopt AI.
-4. **DigitalOcean Partnership**: Official cloud partner, which means enterprise-grade infrastructure reliability.
-5. **Client Portal (Zerostic Studio)**: Full transparency via a dedicated client dashboard — clients always know project status and payments.
-6. **India-Based Pricing with Global Quality**: Located in Faridabad, India, offering competitive pricing without compromising on quality.
-7. **Multi-Industry Experience**: 11+ industries covered, meaning cross-domain best practices are applied to every project.
-8. **Passionate Culture**: Small but dedicated team, meaning clients get direct attention rather than being lost in a large agency.
+Zerostic works with:
+- **Startups** looking to build their first digital product (app, website, or cloud platform)
+- **SMBs (Small and Medium Businesses)** digitising their operations
+- **Enterprises** undergoing digital transformation or needing managed cloud and DevOps expertise
+- **Product companies** that need a dedicated technology partner to build and scale their platform
+- **Traditional businesses** (advertising, manufacturing, logistics) that need a tech partner to modernise their operations
 
 ---
 
-## 10. Sales Messaging & Pitch Angles
+## 9. Get a Quote / Contact
 
-### For a Startup Founder:
-> "You've got the idea. Zerostic turns it into a real product — fast. We handle research to validate it, design and dev to build it, and deployment to launch it. You focus on your vision; we handle the tech."
+Clients can reach Zerostic through the following channels:
 
-### For an SME Wanting to Digitize:
-> "Your business is growing, but manual processes are holding you back. Zerostic builds custom software that automates your operations, reduces errors, and scales with you — whether it's a mobile app, web platform, or cloud infrastructure."
+- **Quote Request Form:** [https://www.zerostic.com/get-quote/](https://www.zerostic.com/get-quote/)
+- **Email:** support@zerostic.com
+- **Phone:** +91 80763 76175
+- **Client Portal:** [https://studio.zerostic.com](https://studio.zerostic.com)
+- **Instagram:** [@zerostic](https://instagram.com/zerostic)
 
-### For an Enterprise Needing Cloud/DevOps:
-> "Zerostic is a DigitalOcean partner specializing in cloud-native architecture, Kubernetes deployments, CI/CD pipelines, and AI integration. We make your infrastructure reliable, scalable, and future-proof."
-
-### For an EdTech or Fintech Company:
-> "We've built our own EdTech (AppLab) and Fintech (FnO Bazar) products from scratch — so we understand the domain deeply. When you partner with Zerostic, you get a team that thinks like a product company, not just a dev shop."
+**Service options on the quote form include:**
+- App Design
+- Android App
+- iOS App
+- UX Design
+- Web Design
+- Website
 
 ---
 
-## 11. Frequently Asked Questions (FAQ) for JAI
+## 10. Internship / Career
 
-**Q: Where is Zerostic located?**  
-A: Zerostic is headquartered at Surajkund, Faridabad, Haryana, India.
+Zerostic actively recruits interns and early-career talent. Interested candidates can apply via:  
+[https://zerostic.link/internship](https://zerostic.link/internship)
+
+This reflects Zerostic's investment in growing its technical team and nurturing young engineering talent.
+
+---
+
+## 11. Privacy & Data Practices
+
+Zerostic maintains a formal privacy policy. Key highlights relevant to client relationships:
+- Zerostic **never stores bank account details** of customers.
+- User data is stored on Zerostic's servers with the exception of confidential account credentials.
+- Zerostic may share aggregate (non-personally identifiable) data with business partners; it does **not** share personally identifiable information with third parties without explicit user consent.
+- Data collected depends on the specific software or service being used.
+- Users can edit or delete their account at any time by contacting Zerostic.
+- Full Privacy Policy: [https://www.zerostic.com/privacy](https://www.zerostic.com/privacy)
+
+---
+
+## 12. Sales Positioning — Key Messages for JAI
+
+Use these messages when pitching Zerostic to prospects:
+
+### For Startups:
+> "Zerostic takes your idea from concept to market-ready product — research, design, development, and deployment — all under one roof. You don't need multiple agencies. We're your end-to-end tech partner."
+
+### For SMBs wanting a Mobile App:
+> "Whether you need an Android app, an iOS app, or both, Zerostic handles everything — from UI design to app store submission. We've already built and shipped apps across fintech, edtech, and advertising."
+
+### For Businesses wanting a Website:
+> "We build websites that are responsive, SEO-ready, and analytics-enabled from day one. Fast turnaround, clean design, and built to grow with your business."
+
+### For Enterprises needing Cloud & DevOps:
+> "Zerostic is a DigitalOcean certified partner with hands-on expertise in Kubernetes, CI/CD pipelines, Kafka, and cloud migrations. We manage your infrastructure so your team can stay focused on shipping product."
+
+### For Product Companies wanting a Tech Partner:
+> "We've built platforms like FnO Bazar (fintech), AppLab (edtech), and the LOA mobile app (outdoor advertising). We know what it takes to turn a product vision into a scalable, live platform."
+
+### Trust Signals:
+- DigitalOcean certified partner
+- Live apps published on the Google Play Store with verified user reviews
+- Clients across fintech, edtech, advertising, and more
+- Real address, phone number, and email — not just a landing page
+- Transparent privacy practices; no bank data stored
+
+---
+
+## 13. Frequently Asked Questions (for JAI)
 
 **Q: What kind of apps does Zerostic build?**  
-A: Zerostic builds Android apps, iOS apps, and web platforms across industries including Fintech, EdTech, E-commerce, Healthcare, Logistics, and more.
+A: Zerostic builds native Android apps, native iOS apps, and cross-platform web apps. We've built everything from fintech stock analysis tools to edtech learning platforms and field operations apps for advertising agencies.
 
-**Q: Does Zerostic handle the full project or just development?**  
-A: Zerostic handles the full lifecycle: Product Research → Product Development → Product Deployment. They are a complete technology partner.
+**Q: Does Zerostic do end-to-end development or just coding?**  
+A: End-to-end. We cover research, design, development, deployment, and ongoing hosting/support.
 
-**Q: How do I track my project's progress?**  
-A: Through Zerostic Studio (studio.zerostic.com) — a dedicated client portal for project management, communication, and payments.
+**Q: Can Zerostic manage my cloud infrastructure after building my app?**  
+A: Yes. Zerostic offers managed web/app hosting, DevOps, and cloud infrastructure management as ongoing services — not just one-time builds.
 
-**Q: Does Zerostic do cloud and DevOps work?**  
-A: Yes. Zerostic is a DigitalOcean partner offering cloud infrastructure management, cloud migration, CI/CD, Kubernetes deployments, Kafka, and DevOps services.
+**Q: What is Zerostic Studio?**  
+A: Zerostic Studio (studio.zerostic.com) is the client portal where clients can track their projects, manage payments, and stay in sync with the Zerostic team throughout the engagement.
 
-**Q: Can Zerostic help with AI-powered applications?**  
-A: Yes. Zerostic specializes in AI-driven software and cloud-native AI integration.
+**Q: Does Zerostic work with startups or only enterprises?**  
+A: Both. Zerostic explicitly works with startups who have an idea they want to build, as well as enterprises that need cloud, DevOps, and digital transformation expertise.
 
-**Q: Does Zerostic have any live products to prove their work?**  
-A: Yes — FnO Bazar (Fintech app on Google Play), AppLab (EdTech platform), the LOA App (Enterprise outdoor advertising), and Zerostic Studio (their own client portal SaaS).
+**Q: Is Zerostic based in India?**  
+A: Yes — headquartered in Faridabad, Haryana, India. They support clients in English and Hindi.
 
-**Q: What industries does Zerostic work with?**  
-A: E-Commerce, Retail, Fintech, Gaming, Healthcare, Streaming, Manufacturing, Hospitality, Logistics & Transportation, Energy & Utilities, Legal, and EdTech.
-
-**Q: How do I contact Zerostic?**  
-A: Email: support@zerostic.com | Phone: +91 8076376175 | Website contact form: zerostic.com
-
-**Q: Does Zerostic offer internship or career opportunities?**  
-A: Yes — they accept internship applications at zerostic.link/internship.
-
-**Q: Is Zerostic only for large companies?**  
-A: No — Zerostic works with startups, SMEs, and enterprises. They are particularly well-suited for founders who need a full tech partner from day one.
+**Q: How do I get started with Zerostic?**  
+A: Visit zerostic.com/get-quote, fill in the project details, and the team will get in touch. You can also email support@zerostic.com or call +91 80763 76175.
 
 ---
 
-## 12. Contact & Social Presence
-
-| Channel | Detail |
-|---|---|
-| **Website** | https://zerostic.com |
-| **Client Portal** | https://studio.zerostic.com |
-| **Email** | support@zerostic.com |
-| **Phone** | +91 8076376175 |
-| **Instagram** | https://instagram.com/zerostic |
-| **Facebook** | https://facebook.com/zerostic.tech |
-| **Twitter/X** | @ZerosticSupport |
-| **Google Play** | https://play.google.com/store/apps/dev?id=7897768660657548664 |
-| **DigitalOcean Partner** | https://www.digitalocean.com/partners/directory/zerostic |
-| **Internship/Careers** | https://zerostic.link/internship |
-
----
-
-## 13. Key Objection Handling
-
-| Objection | Response |
-|---|---|
-| *"We don't know if you can handle our industry."* | Zerostic has worked across 11+ industries including Fintech, Healthcare, EdTech, Retail, and Logistics. They also have their own live products in Fintech and EdTech. |
-| *"How do we know the quality will be good?"* | Zerostic has live products on Google Play and the web — clients can test and review FnO Bazar and AppLab themselves. |
-| *"We need visibility into what's happening."* | Every client gets access to Zerostic Studio, a full client portal with real-time project updates and payment tracking. |
-| *"We're a startup with a tight budget."* | Zerostic is India-based, offering competitive pricing without sacrificing quality. They specialize in working with startups and can scale to enterprise. |
-| *"We already have a team — we just need cloud/DevOps help."* | Zerostic offers standalone cloud, DevOps, CI/CD, and Kubernetes services as a DigitalOcean partner. |
-| *"What if the project scope changes?"* | Zerostic follows a research-first approach to nail scope early, and their Studio portal makes change requests and communication seamless. |
-
----
-
-*End of Zerostic Knowledge Base — JAI Reference Document*
+*Last updated: May 2026. Source: zerostic.com, studio.zerostic.com, Google Play Store, DigitalOcean Partner Directory.*

@@ -82,38 +82,47 @@ def ingest(docs_dir: str = "docs", chroma_dir: str = "chroma_db") -> None:
     print(f"[SUCCESS] Ingested {len(chunks)} chunks from {len(raw_docs)} documents into {chroma_dir}.")
 
 
-def ingest_from_pages(docs: list, chroma_dir: str = "chroma_db") -> None:
+def ingest_local_files(docs_dir: str = "docs", chroma_dir: str = "chroma_db") -> None:
     """
-    Embed a list of LangChain Documents into Chroma, replacing any previously
-    scraped content.
-
-    docs: list[Document] — as returned by rag.crawler.fetch_zerostic_pages()
+    Embed all local docs into Chroma, replacing previously ingested local chunks.
+    Safe to call on every startup — idempotent via metadata filter deletion.
     """
     from langchain_text_splitters import RecursiveCharacterTextSplitter
     from langchain_huggingface import HuggingFaceEmbeddings
     from langchain_chroma import Chroma
+    from rag.pipeline import reset_retriever
 
-    docs = [d for d in docs if d.page_content]
-    if not docs:
+    docs_path = Path(docs_dir)
+    if not docs_path.exists():
+        print(f"[ingest_local] Docs directory not found: {docs_dir}")
         return
 
+    raw_docs = load_all_docs(docs_dir)
+    if not raw_docs:
+        print("[ingest_local] No supported files found.")
+        return
+
+    # Tag all local chunks so we can delete and replace on next startup
+    for doc in raw_docs:
+        doc.metadata["local"] = True
+
     splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=150)
-    chunks = splitter.split_documents(docs)
+    chunks = splitter.split_documents(raw_docs)
 
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     chroma_path = Path(chroma_dir)
 
     if chroma_path.exists():
         vs = Chroma(persist_directory=chroma_dir, embedding_function=embeddings)
-        # Remove old web-scraped chunks before adding fresh ones
-        existing = vs.get(where={"web_scraped": True})
+        existing = vs.get(where={"local": True})
         if existing["ids"]:
             vs.delete(ids=existing["ids"])
         vs.add_documents(chunks)
     else:
         Chroma.from_documents(chunks, embeddings, persist_directory=chroma_dir)
 
-    print(f"[ingest] {len(chunks)} web chunks → {chroma_dir}")
+    reset_retriever()
+    print(f"[ingest_local] {len(chunks)} local chunks → {chroma_dir}")
 
 
 def main():

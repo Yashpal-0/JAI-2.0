@@ -3,7 +3,7 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(__file__))
 
-from contextlib import asynccontextmanager, suppress
+from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -18,30 +18,23 @@ from config import SUPPORTED_TENANTS
 from agents.orchestrator import build_orchestrator
 from db import init_db, upsert_thread, list_threads, delete_thread, get_thread_owner
 
-_REFRESH_INTERVAL = 24 * 3600
 _DB_PATH = os.path.join(os.path.dirname(__file__), "checkpoints.db")
+_DOCS_DIR = os.path.join(os.path.dirname(__file__), "docs")
+_CHROMA_DIR = os.path.join(os.path.dirname(__file__), "chroma_db")
 
 
-async def _company_refresh_loop() -> None:
-    from rag.company_context import refresh_company_context
-    while True:
-        try:
-            await refresh_company_context()
-        except Exception as e:
-            print(f"[api] Company context refresh error: {e}")
-        await asyncio.sleep(_REFRESH_INTERVAL)
+def _ingest_local_docs() -> None:
+    from rag.ingest import ingest_local_files
+    ingest_local_files(docs_dir=_DOCS_DIR, chroma_dir=_CHROMA_DIR)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
+    await asyncio.to_thread(_ingest_local_docs)
     async with AsyncSqliteSaver.from_conn_string(_DB_PATH) as saver:
         app.state.graph = build_orchestrator(checkpointer=saver)
-        task = asyncio.create_task(_company_refresh_loop())
         yield
-        task.cancel()
-        with suppress(asyncio.CancelledError):
-            await task
 
 
 app = FastAPI(lifespan=lifespan)
@@ -153,7 +146,10 @@ async def chat(req: ChatRequest, request: Request):
                     "thread_id": req.thread_id,
                 }
             }
-            _STREAM_NODES = {"orchestrator", "analytics_agent", "input_guard", "output_guard"}
+            # Only stream from LLM-response nodes — guard nodes run classifier LLMs
+            # internally whose JSON responses must never reach the client.
+            _STREAM_NODES = {"orchestrator", "analytics_agent"}
+            yielded = False
             async for chunk, metadata in graph.astream(
                 {
                     "messages": [HumanMessage(content=message)],
@@ -167,6 +163,18 @@ async def chat(req: ChatRequest, request: Request):
                     continue
                 if isinstance(chunk, (AIMessageChunk, AIMessage)) and chunk.content:
                     yield f"data: {chunk.content.replace(chr(10), chr(92) + 'n')}\n\n"
+                    yielded = True
+
+            # If nothing was streamed, a guard blocked the request — fetch its
+            # canned response from state and send it as the sole reply.
+            if not yielded:
+                state = await graph.aget_state(config)
+                if state and state.values:
+                    msgs = state.values.get("messages", [])
+                    if msgs and isinstance(msgs[-1], AIMessage) and msgs[-1].content:
+                        text = msgs[-1].content.replace("\n", "\\n")
+                        yield f"data: {text}\n\n"
+
             yield "data: [DONE]\n\n"
         except Exception as e:
             yield f"event: error\ndata: {str(e).replace(chr(10), ' ')}\n\n"

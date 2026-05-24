@@ -58,7 +58,7 @@ def _run_llm_input_classifier(rule: dict, query: str) -> bool:
     llm = get_llm()
     prompt = rule["prompt"].replace("{query}", query)
     try:
-        result = llm.invoke(prompt, config={"callbacks": []})
+        result = llm.invoke(prompt)
         content = result.content if hasattr(result, "content") else str(result)
         match = re.search(r"\{[^{}]+\}", content, re.DOTALL)
         if match:
@@ -80,7 +80,7 @@ def _run_llm_output_checker(rule: dict, response: str, rag_context: str) -> bool
         .replace("{response}", response)
     )
     try:
-        result = llm.invoke(prompt, config={"callbacks": []})
+        result = llm.invoke(prompt)
         content = result.content if hasattr(result, "content") else str(result)
         match = re.search(r"\{[^{}]+\}", content, re.DOTALL)
         if match:
