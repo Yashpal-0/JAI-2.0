@@ -4,6 +4,13 @@ export interface Message {
   content: string
 }
 
+export interface Thread {
+  id: string
+  title: string
+  createdAt: number
+  updatedAt: number
+}
+
 export const TENANTS = [
   'zerostic.com',
 ] as const

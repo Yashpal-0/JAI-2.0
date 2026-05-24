@@ -1,8 +1,50 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.example
+
+# Python virtual environment and dependencies
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Python cache and testing
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+*.pckl
+
+# Node.js dependencies and build outputs
+node_modules/
+frontend/node_modules/
+frontend/dist/
+.eslintcache
+
+# Databases, lockfiles, and local caches
+*.db
+*.db-shm
+*.db-wal
+backend/chroma_db/
+backend/rag/company_cache.json
+
+# Tool and IDE directories
+.claude/
+.antigravitycli/
+.playwright-mcp/
+.superpowers/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
 tmp/
 ignore-docs/
-.venv/
-.playwright-mcp/
-.antigravitycli/
-.env
-.env.example
-.zerostic_rag.db
+.langgraph_api/

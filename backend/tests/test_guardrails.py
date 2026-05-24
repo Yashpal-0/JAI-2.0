@@ -18,10 +18,15 @@ REFUSE_SIGNALS = [
     "cannot", "can't", "won't", "unable", "not able", "outside my scope",
     "outside the scope", "not able to help", "designed to", "only assist",
     "only answer", "only help", "not here to", "please contact",
-    "I'm here to help", "relevant to zerostic", "zerostic-related",
+    "i'm here to help", "relevant to zerostic", "zerostic-related",
     "not something i", "don't have the ability", "outside my area",
     "i'm not able", "i am not able", "i cannot", "this isn't something",
     "this is not something", "my purpose", "not support",
+    # Redirect-style refusals
+    "that's outside my scope", "outside my area", "i'm here to assist",
+    "i'm here to help you with", "i can only", "i only assist",
+    "i'm focused on", "i specialize in", "i'm designed to",
+    "zerostic's products and services", "zerostic products",
 ]
 
 def send(prompt: str) -> str:

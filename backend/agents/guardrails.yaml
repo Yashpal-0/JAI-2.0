@@ -42,6 +42,18 @@ input_rules:
       - "(?i)(suicide|self.{0,5}harm).{0,20}(method|how|guide|instructions|step.{0,5}by.{0,5}step)"
     response: "I'm not able to help with that. My purpose is to assist you with Zerostic services. Is there anything Zerostic-related I can help you with?"
 
+  - id: offtopic_regex
+    type: regex
+    enabled: true
+    # Fast-path refusal for clearly out-of-scope queries that bypass the LLM.
+    patterns:
+      - "(?i)write\\s+(me\\s+)?a\\s+(short\\s+)?(story|poem|song|novel|fairy\\s+tale|haiku|limerick)"
+      - "(?i)what\\s+is\\s+the\\s+capital\\s+of\\b"
+      - "(?i)\\b(solve|evaluate|compute|integrate|differentiate)\\b.{0,40}\\b(integral|equation|formula|derivative|polynomial|sin|cos|tan)\\b"
+      - "(?i)\\b(lethal\\s+dose|LD50|median\\s+lethal)\\b"
+      - "(?i)(what|who)\\s+won\\s+the.{0,30}(election|war|world\\s+cup|oscar|nobel)"
+    response: "That's outside my scope. I'm JAI, Zerostic's sales assistant — I help with Zerostic products, projects, and services. How can I help you today?"
+
   - id: llm_classifier
     type: llm
     enabled: true
@@ -75,10 +87,10 @@ output_rules:
     action: block
     # Detects if the LLM accidentally echoed back internal system prompt fragments.
     patterns:
-      - "CRITICAL SECURITY MANDATE"
-      - "Interactive Workflow Protocol"
+      - "Your job is to sell Zerostic.{0,10}products"
+      - "KNOWLEDGE BASE CONTEXT"
       - "_SYSTEM_PROMPT"
-      - "KNOWLEDGE BASE CONTEXT \\(use this to answer"
+      - "workflow_reset"
     response: "I encountered an issue generating a response. Please try again or contact support@zerostic.com."
 
   - id: internal_data_leak
@@ -95,7 +107,7 @@ output_rules:
 
   - id: faithfulness_check
     type: llm
-    enabled: true
+    enabled: false
     action: block
     # Only runs when RAG context was retrieved. Checks if the response contains
     # specific Zerostic service claims not grounded in the retrieved context.

@@ -10,7 +10,7 @@ import json
 import logging
 import re
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import yaml
 from langchain_core.messages import AIMessage
@@ -58,7 +58,7 @@ def _run_llm_input_classifier(rule: dict, query: str) -> bool:
     llm = get_llm()
     prompt = rule["prompt"].replace("{query}", query)
     try:
-        result = llm.invoke(prompt)
+        result = llm.invoke(prompt, config={"callbacks": []})
         content = result.content if hasattr(result, "content") else str(result)
         match = re.search(r"\{[^{}]+\}", content, re.DOTALL)
         if match:
@@ -80,7 +80,7 @@ def _run_llm_output_checker(rule: dict, response: str, rag_context: str) -> bool
         .replace("{response}", response)
     )
     try:
-        result = llm.invoke(prompt)
+        result = llm.invoke(prompt, config={"callbacks": []})
         content = result.content if hasattr(result, "content") else str(result)
         match = re.search(r"\{[^{}]+\}", content, re.DOTALL)
         if match:
@@ -93,7 +93,7 @@ def _run_llm_output_checker(rule: dict, response: str, rag_context: str) -> bool
 
 # ── LangGraph nodes ────────────────────────────────────────────────────────────
 
-def input_guard_node(state: JAIState, config: RunnableConfig) -> Command:
+def input_guard_node(state: JAIState, config: RunnableConfig) -> Command[Literal["orchestrator", "__end__"]]:
     """
     Runs before the orchestrator. Evaluates input_rules from guardrails.yaml.
     Regex rules run first (no latency); LLM rules run only if all regex rules pass.
@@ -130,14 +130,15 @@ def input_guard_node(state: JAIState, config: RunnableConfig) -> Command:
     return Command(goto="orchestrator")
 
 
-def output_guard_node(state: JAIState, config: RunnableConfig) -> Command:
+def output_guard_node(state: JAIState, config: RunnableConfig) -> dict:
     """
     Runs after the orchestrator/analytics agent. Evaluates output_rules from
     guardrails.yaml before the response reaches the client.
+    Always terminates — the graph has an explicit edge output_guard → END.
     """
     ai_messages = [m for m in state["messages"] if isinstance(m, AIMessage)]
     if not ai_messages:
-        return Command(goto=END)
+        return {}
 
     last_response = ai_messages[-1].content
     rag_context = state.get("rag_context") or ""
@@ -160,9 +161,6 @@ def output_guard_node(state: JAIState, config: RunnableConfig) -> Command:
                 f"[guards] Output blocked — rule='{rule['id']}'  "
                 f"response={last_response[:80]!r}"
             )
-            return Command(
-                goto=END,
-                update={"messages": [AIMessage(content=rule["response"])]},
-            )
+            return {"messages": [AIMessage(content=rule["response"])]}
 
-    return Command(goto=END)
+    return {}

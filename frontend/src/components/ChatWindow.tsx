@@ -21,30 +21,13 @@ export default function ChatWindow({ messages, isStreaming }: Props) {
     return -1
   })()
 
-  const containerStyle: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    overflowY: 'auto',
-    flex: 1,
-    padding: '16px',
-  }
-
-  const emptyStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 1,
-    color: '#888',
-    fontSize: '16px',
-  }
-
   return (
-    <div style={containerStyle}>
+    <div className="chat-scroll">
       {messages.length === 0 ? (
-        <div style={emptyStyle}>Start the conversation...</div>
+        <div className="chat-empty">Start the conversation...</div>
       ) : (
         messages.map((message, index) => (
-          <div key={message.id} data-testid="message-bubble">
+          <div key={message.id} data-testid="message-bubble" className="message-wrapper">
             <MessageBubble
               message={message}
               isStreaming={isStreaming}

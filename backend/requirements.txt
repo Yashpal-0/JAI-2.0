@@ -2,6 +2,8 @@
 langchain
 langgraph
 langgraph-cli[inmem]
+langgraph-checkpoint-sqlite
+aiosqlite
 langchain-openai
 langchain-community
 langchain-chroma

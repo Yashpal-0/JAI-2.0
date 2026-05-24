@@ -1,21 +1,59 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { Message } from '../types'
 
-function getOrCreateThreadId(tenant: string): string {
-  const threadKey = `jai_thread_id_${tenant}`
-  let id = sessionStorage.getItem(threadKey)
-  if (!id) {
-    id = crypto.randomUUID()
-    sessionStorage.setItem(threadKey, id)
-  }
-  return id
+const msgKey = (id: string) => `jai_msgs_${id}`
+
+function cacheMessages(threadId: string, messages: Message[]) {
+  if (messages.length > 0) localStorage.setItem(msgKey(threadId), JSON.stringify(messages))
 }
 
-export function useChat(tenant: string, userId: string) {
+function getCached(threadId: string): Message[] | null {
+  try {
+    const raw = localStorage.getItem(msgKey(threadId))
+    if (!raw) return null
+    return JSON.parse(raw)
+  } catch { return null }
+}
+
+async function fetchMessages(threadId: string, userId: string, tenantId: string): Promise<Message[]> {
+  try {
+    const res = await fetch(`/threads/${threadId}/messages?user_id=${encodeURIComponent(userId)}&tenant_id=${encodeURIComponent(tenantId)}`)
+    if (!res.ok) return []
+    const data: { role: string; content: string }[] = await res.json()
+    return data.map(m => ({ id: crypto.randomUUID(), role: m.role as Message['role'], content: m.content }))
+  } catch { return [] }
+}
+
+export function useChat(tenant: string, userId: string, threadId: string) {
   const [messages, setMessages] = useState<Message[]>([])
   const [isStreaming, setIsStreaming] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const abortControllerRef = useRef<AbortController | null>(null)
+
+  // Switch thread: abort in-flight, load from cache or backend
+  useEffect(() => {
+    abortControllerRef.current?.abort()
+    setIsStreaming(false)
+    setError(null)
+
+    const cached = getCached(threadId)
+    if (cached) {
+      setMessages(cached)
+    } else {
+      setMessages([])
+      fetchMessages(threadId, userId, tenant).then(msgs => {
+        if (msgs.length > 0) {
+          setMessages(msgs)
+          cacheMessages(threadId, msgs)
+        }
+      })
+    }
+  }, [threadId, userId])
+
+  // Keep localStorage cache in sync
+  useEffect(() => {
+    cacheMessages(threadId, messages)
+  }, [messages, threadId])
 
   useEffect(() => {
     return () => { abortControllerRef.current?.abort() }
@@ -31,10 +69,11 @@ export function useChat(tenant: string, userId: string) {
     setIsStreaming(true)
 
     const abortController = new AbortController()
-    abortControllerRef.current?.abort()  // cancel any in-flight request
+    abortControllerRef.current?.abort()
     abortControllerRef.current = abortController
 
     try {
+      const isFirst = messages.length === 0
       const response = await fetch('/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -42,7 +81,8 @@ export function useChat(tenant: string, userId: string) {
           message: text,
           user_id: userId,
           tenant_id: tenant,
-          thread_id: getOrCreateThreadId(tenant),
+          thread_id: threadId,
+          title: isFirst ? text.slice(0, 60) : '',
         }),
         signal: abortController.signal,
       })
@@ -63,13 +103,13 @@ export function useChat(tenant: string, userId: string) {
 
         buffer += decoder.decode(value, { stream: true })
         const lines = buffer.split('\n')
-        buffer = lines.pop() ?? ''  // keep the last incomplete line
+        buffer = lines.pop() ?? ''
 
         for (const line of lines) {
           if (line === 'event: error') {
             isErrorEvent = true
           } else if (line.startsWith('data: ')) {
-            const data = line.slice(6)
+            const data = line.slice(6).replace(/\\n/g, '\n')
             if (data === '[DONE]') break outer
             if (isErrorEvent) {
               setError(data)
@@ -80,7 +120,7 @@ export function useChat(tenant: string, userId: string) {
               })
               break outer
             }
-            if (data.trim()) {
+            if (data) {
               setMessages(prev => {
                 const updated = [...prev]
                 const last = updated[updated.length - 1]
@@ -103,7 +143,7 @@ export function useChat(tenant: string, userId: string) {
     } finally {
       setIsStreaming(false)
     }
-  }, [tenant, userId, isStreaming])
+  }, [tenant, userId, threadId, isStreaming, messages.length])
 
   return { messages, isStreaming, error, sendMessage }
 }

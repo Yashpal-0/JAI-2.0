@@ -15,21 +15,21 @@ describe('TenantSelector', () => {
     }
   })
 
-  it('renders all 3 tenant options', () => {
+  it('renders all tenant options', () => {
     render(<TenantSelector {...defaultProps} />)
     const options = screen.getAllByRole('option')
-    expect(options).toHaveLength(3)
+    expect(options).toHaveLength(TENANTS.length)
     TENANTS.forEach((tenant) => {
       expect(screen.getByRole('option', { name: tenant })).toBeInTheDocument()
     })
   })
 
-  it('calls onChange with the new tenant when selection changes', async () => {
+  it('calls onChange with the selected tenant', async () => {
     const onChange = vi.fn()
     render(<TenantSelector {...defaultProps} onChange={onChange} />)
     const select = screen.getByRole('combobox')
-    await userEvent.selectOptions(select, TENANTS[1])
-    expect(onChange).toHaveBeenCalledWith(TENANTS[1])
+    await userEvent.selectOptions(select, TENANTS[0])
+    expect(onChange).toHaveBeenCalledWith(TENANTS[0])
   })
 
   it('is disabled when disabled={true} is passed', () => {
