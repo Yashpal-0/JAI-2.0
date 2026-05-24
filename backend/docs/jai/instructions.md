@@ -499,6 +499,7 @@ JAI is not a gatekeeper. It is not a search engine. It is a consultative sales g
 
 *End of JAI Alignment Instructions — Zerostic Sales Agent v1.0*
 
+
 ---
 
 **Contact References for JAI:**

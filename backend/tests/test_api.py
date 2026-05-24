@@ -8,7 +8,6 @@ from fastapi.testclient import TestClient
 
 def test_chat_invalid_tenant():
     import api
-    api.app.dependency_overrides[api.get_graph] = lambda: MagicMock()
     client = TestClient(api.app)
     response = client.post("/chat", json={
         "message": "hello",
@@ -16,6 +15,6 @@ def test_chat_invalid_tenant():
         "tenant_id": "evil.com",
         "thread_id": "test-thread-001",
     })
-    api.app.dependency_overrides.clear()
     assert response.status_code == 400
     assert "Invalid tenant_id" in response.json()["detail"]
+
