@@ -14,6 +14,12 @@ from pathlib import Path
 
 SUPPORTED_EXTENSIONS = {".md", ".txt", ".json", ".jsonl"}
 
+# Fix: docs/jai/ contains the JAI system prompt and behavioral guide — internal
+# config that must NOT be embedded into the vectorstore. RAG retrieving prompt
+# fragments (e.g. "NEVER quote specific pricing") as if they were factual KB
+# content pollutes retrieval and can trigger the system_prompt_leak output guard.
+EXCLUDED_DIRS = {"jai"}
+
 
 def load_all_docs(docs_dir: str):
     from langchain_community.document_loaders import TextLoader
@@ -24,6 +30,12 @@ def load_all_docs(docs_dir: str):
 
     for file in sorted(docs_path.rglob("*")):
         if not file.is_file() or file.suffix not in SUPPORTED_EXTENSIONS:
+            continue
+
+        # Skip any file whose path passes through an excluded directory
+        relative_parts = file.relative_to(docs_path).parts
+        if any(part in EXCLUDED_DIRS for part in relative_parts):
+            print(f"  Skipping (excluded dir) {file.relative_to(docs_path)}")
             continue
 
         print(f"  Loading {file.relative_to(docs_path)} ...")
@@ -82,47 +94,38 @@ def ingest(docs_dir: str = "docs", chroma_dir: str = "chroma_db") -> None:
     print(f"[SUCCESS] Ingested {len(chunks)} chunks from {len(raw_docs)} documents into {chroma_dir}.")
 
 
-def ingest_local_files(docs_dir: str = "docs", chroma_dir: str = "chroma_db") -> None:
+def ingest_from_pages(docs: list, chroma_dir: str = "chroma_db") -> None:
     """
-    Embed all local docs into Chroma, replacing previously ingested local chunks.
-    Safe to call on every startup — idempotent via metadata filter deletion.
+    Embed a list of LangChain Documents into Chroma, replacing any previously
+    scraped content.
+
+    docs: list[Document] — as returned by rag.crawler.fetch_zerostic_pages()
     """
     from langchain_text_splitters import RecursiveCharacterTextSplitter
     from langchain_huggingface import HuggingFaceEmbeddings
     from langchain_chroma import Chroma
-    from rag.pipeline import reset_retriever
 
-    docs_path = Path(docs_dir)
-    if not docs_path.exists():
-        print(f"[ingest_local] Docs directory not found: {docs_dir}")
+    docs = [d for d in docs if d.page_content]
+    if not docs:
         return
-
-    raw_docs = load_all_docs(docs_dir)
-    if not raw_docs:
-        print("[ingest_local] No supported files found.")
-        return
-
-    # Tag all local chunks so we can delete and replace on next startup
-    for doc in raw_docs:
-        doc.metadata["local"] = True
 
     splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=150)
-    chunks = splitter.split_documents(raw_docs)
+    chunks = splitter.split_documents(docs)
 
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     chroma_path = Path(chroma_dir)
 
     if chroma_path.exists():
         vs = Chroma(persist_directory=chroma_dir, embedding_function=embeddings)
-        existing = vs.get(where={"local": True})
+        # Remove old web-scraped chunks before adding fresh ones
+        existing = vs.get(where={"web_scraped": True})
         if existing["ids"]:
             vs.delete(ids=existing["ids"])
         vs.add_documents(chunks)
     else:
         Chroma.from_documents(chunks, embeddings, persist_directory=chroma_dir)
 
-    reset_retriever()
-    print(f"[ingest_local] {len(chunks)} local chunks → {chroma_dir}")
+    print(f"[ingest] {len(chunks)} web chunks → {chroma_dir}")
 
 
 def main():

@@ -85,10 +85,12 @@ output_rules:
     type: regex
     enabled: true
     action: block
-    # Detects if the LLM accidentally echoed back internal system prompt fragments.
+    # Fix: anchor "KNOWLEDGE BASE CONTEXT" to start-of-string to avoid
+    # false positives on innocent user messages that happen to contain those words.
+    # The label is only injected at the very start of the RAG context block.
     patterns:
       - "Your job is to sell Zerostic.{0,10}products"
-      - "KNOWLEDGE BASE CONTEXT"
+      - "(?m)^KNOWLEDGE BASE CONTEXT"
       - "_SYSTEM_PROMPT"
       - "workflow_reset"
     response: "I encountered an issue generating a response. Please try again or contact support@zerostic.com."
@@ -107,7 +109,10 @@ output_rules:
 
   - id: faithfulness_check
     type: llm
-    enabled: false
+    # Fix: was disabled (false). Now enabled — the knowledge_base.md is comprehensive
+    # enough to ground all claims. This guard actively blocks JAI from hallucinating
+    # Zerostic capabilities not present in the retrieved RAG context.
+    enabled: true
     action: block
     # Only runs when RAG context was retrieved. Checks if the response contains
     # specific Zerostic service claims not grounded in the retrieved context.

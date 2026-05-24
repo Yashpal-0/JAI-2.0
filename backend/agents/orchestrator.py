@@ -19,7 +19,9 @@ from rag.pipeline import build_rag_context
 
 MAX_HISTORY_MESSAGES = 20
 
-_INSTRUCTIONS_PATH = Path(__file__).parent.parent / "jai_instructions.md"
+# Fix: was incorrectly pointing to the stale root-level jai_instructions.md.
+# Now reads the canonical file maintained under docs/jai/instructions.md.
+_INSTRUCTIONS_PATH = Path(__file__).parent.parent / "docs" / "jai" / "instructions.md"
 _JAI_INSTRUCTIONS: str = _INSTRUCTIONS_PATH.read_text(encoding="utf-8")
 
 _COMING_SOON = (
@@ -28,6 +30,9 @@ _COMING_SOON = (
 )
 
 
+def _build_system_prompt() -> str:
+    from rag.company_context import get_company_context_str
+    return _JAI_INSTRUCTIONS.replace("{about}", get_company_context_str())
 
 
 # ── Sub-agent routing ──────────────────────────────────────────────────────────
@@ -143,7 +148,8 @@ def build_orchestrator(
         last_query = user_messages[-1].content if user_messages else ""
 
         rag_context = build_rag_context(last_query) if last_query else ""
-        system_content = _JAI_INSTRUCTIONS if not rag_context else f"{_JAI_INSTRUCTIONS}\n\n{rag_context}"
+        base_prompt = _build_system_prompt()
+        system_content = base_prompt if not rag_context else f"{base_prompt}\n\n{rag_context}"
 
         history = all_messages[-MAX_HISTORY_MESSAGES:] if len(all_messages) > MAX_HISTORY_MESSAGES else all_messages
         messages = [SystemMessage(content=system_content)] + history
